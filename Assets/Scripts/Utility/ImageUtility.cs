@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using Unity.VisualScripting;
+using System.ComponentModel;
 using UnityEngine;
 
 public class ImageUtility
@@ -40,5 +39,26 @@ public class ImageUtility
         if (texture == null) return null;
         return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), pixelPerUnits);
     }
+
+    public static Color GetColorFromHexEnum(HexEnum hexEnum)
+    {
+        var hexString = EnumUtility.GetDescription(hexEnum);
+
+        if (ColorUtility.TryParseHtmlString(hexString, out var color))
+        {
+            return color;
+        } else
+        {
+            throw new FormatException($"Invalid hex string: {hexString}");
+        }
+    }
+}
+
+public enum HexEnum
+{
+    [Description("#F5F5F5")]
+    Highlight,
+    [Description("#C8C8C8")]
+    Pressed
 
 }

@@ -51,4 +51,9 @@ public class HomeManager : Singleton<HomeManager>
             ui.gameObject.SetActive(false);
         }
     }
+
+    public void SetPictureImage(int index)
+    {
+        pictureImage.sprite = ImageUtility.CreateSpriteFromTexture(PathUtility.LoadIndexedPicture(index));
+    }
 }

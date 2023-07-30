@@ -23,10 +23,10 @@ public class EditPictureModalManager : Singleton<EditPictureModalManager>
         {
             var pictureCellInstance = Instantiate(pictureCellPrefab, content);
 
-            pictureCellInstance.GetComponent<PictureCellManager>().SetAttributes(pictureKvp.Key);
-            
-            
+            pictureCellInstance.GetComponent<PictureCellManager>().SetImage(pictureKvp.Key);
         }
+
+        cancelButton.onClick.AddListener(ModalManager.Instance.CloseNearestModal);
     }
 
 

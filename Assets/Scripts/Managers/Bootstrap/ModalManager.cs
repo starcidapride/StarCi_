@@ -8,17 +8,19 @@ public class ModalManager : SingletonPersistent<ModalManager>
     private Image backdropImage;
 
     public static bool ModalActive { get; set; } = false;
-    private void Hide()
+    private void Hide(Transform modalInstance)
     {
-        StartCoroutine(HideCoroutine());
+        StartCoroutine(HideCoroutine(modalInstance));
     }
 
-    private IEnumerator HideCoroutine()
+    private IEnumerator HideCoroutine(Transform modalInstance)
     {
         yield return AnimationUtility.ExecuteTriggerThenWait(
             backdropImage.transform,
             Constants.Triggers.FADE_OUT
             );
+
+        yield return new WaitUntil(() => modalInstance.gameObject != null );
 
         backdropImage.gameObject.SetActive(false);
 
@@ -79,16 +81,19 @@ public class ModalManager : SingletonPersistent<ModalManager>
 
     private IEnumerator CloseNearestModalCoroutine()
     {
-        if (HasActived())
-        {
-            Hide();
-        }
-
         var numSiblings = backdropImage.transform.childCount;
 
         if (numSiblings == 0) yield break;
 
         var youngestSibling = backdropImage.transform.GetChild(numSiblings - 1);
+
+        if (numSiblings == 1)
+        {
+            if (HasActived())
+            {
+                Hide(youngestSibling);
+            }
+        }
 
         var closestYoungerSibling = GameObjectUtility.GetClosestSiblingGameObject(youngestSibling, true);
 

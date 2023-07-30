@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,27 +7,40 @@ public class PictureCellManager : MonoBehaviour, IPointerClickHandler, IPointerE
     [SerializeField]
     private Image image;
 
-    private int cellIndex;
+    private int pictureIndex;
 
-    public void SetAttributes(int index)
+    public void SetImage(int index)
     {
-        cellIndex = index;
+        pictureIndex = index;
 
         image.sprite = ImageUtility.CreateSpriteFromTexture(PathUtility.LoadIndexedPicture(index));
     }
 
     void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
     {
-        EditPictureModalManager.Instance.SelectedPictureIndex = cellIndex;
+        var user = LocalSessionManager.Instance.User;
+        try
+        {
+            user.PictureIndex = pictureIndex;
+
+            HomeManager.Instance.SetPictureImage(pictureIndex);
+        } finally
+        {
+            ModalManager.Instance.CloseNearestModal();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        var color = ImageUtility.GetColorFromHexEnum(HexEnum.Highlight);
+
+        image.color = color;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        var color = Color.white;
+
+        image.color = color;
     }
 }
