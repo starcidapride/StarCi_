@@ -44,6 +44,6 @@ public class DeckCollection
 public class Deck
 {
     public string DeckName { get; set; }
-    public List<string> PlayDeck { get; set; }
-    public List<string> CharacterDeck { get; set; }
+    public List<CardName> PlayDeck { get; set; }
+    public List<CardName> CharacterDeck { get; set; }
 }

@@ -97,5 +97,24 @@ public class PathUtility
             return null;
         }
     }
-}
+
+    public static Transform LoadCardPrefab(CardType cardType)
+    {
+        try
+        {
+            var path = cardType switch
+        {
+            CardType.Character => $"Prefabs/Cards/Character Card",
+            CardType.Equipment => $"Prefabs/Cards/Equipment Card",
+            CardType.Spell => $"Prefabs/Cards/Spell Card",
+            _ => $"Prefabs/Cards/Other Card",
+        };
+            return Resources.Load<Transform>(path);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex);
+            return null;
+        }
+    }
 
