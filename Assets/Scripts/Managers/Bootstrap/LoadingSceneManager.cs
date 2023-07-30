@@ -44,6 +44,7 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
 
             case SceneName.CardWarehouse:
 
+                    CardWarehouseManager.Instance.SetActiveUI(true);
                 break;
 
             //case SceneName.LobbyRoom:

@@ -38,4 +38,64 @@ public class PathUtility
             return null;
         }
     }
+
+    public static Texture2D LoadCardImage(CardName cardName)
+    {
+        try
+        {
+            var cardPath = "Images/Cards";
+            var dictionary = CardDictionary.GetCardDictionary();
+        var path = dictionary[cardName].Item1 switch
+        {
+            CardType.Character => $"{cardPath}/Characters/{cardName}/Image",
+            CardType.Equipment => $"{cardPath}/Equipments/{cardName}/Image",
+            CardType.Spell => $"{cardPath}/Spells/{cardName}/Image",
+            _ => $"{cardPath}/Others/{cardName}/Image",
+        };
+
+            return Resources.Load<Texture2D>(path);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex);
+            return null;
+        }
+    }
+
+    public static Texture2D LoadAbilityImage(CardName cardName, AbilitySymbol abilitySymbol)
+    {
+        try
+        {
+            var characterPath = "Images/Cards/Characters";
+            var dictionary = CardDictionary.GetCharacterCardDictionary();
+
+            var path = abilitySymbol switch
+            {
+                AbilitySymbol.Passive => $"{characterPath}/{cardName}/Passive",
+                AbilitySymbol.Q => $"{characterPath}/{cardName}/Q",
+                AbilitySymbol.E => $"{characterPath}/{cardName}/E",
+                _ => $"{characterPath}/{cardName}/R",
+            };
+
+            return Resources.Load<Texture2D>(path);
+
+        } catch (Exception ex)
+        {
+            Debug.Log(ex);
+            return null;
+        }
+    }
+
+    public static Texture2D LoadCardFrame(CardName cardName)
+    {
+        try
+        {
+            return Resources.Load<Texture2D>($"Images/Cards/Frames/Others/{cardName}");
+        } catch (Exception ex)
+        {
+            Debug.Log(ex);
+            return null;
+        }
+    }
 }
+

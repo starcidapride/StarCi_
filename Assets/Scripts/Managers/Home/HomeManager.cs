@@ -19,6 +19,9 @@ public class HomeManager : Singleton<HomeManager>
     private Button editPictureButton;
 
     [SerializeField]
+    private Button goToCardWarehouseButton;
+
+    [SerializeField]
     private Transform editPictureModalPrefab;
 
     private User user;
@@ -32,6 +35,8 @@ public class HomeManager : Singleton<HomeManager>
         usernameText.text = user.Username;
 
         editPictureButton.onClick.AddListener(() => ModalManager.Instance.CreateModal(editPictureModalPrefab));
+
+        goToCardWarehouseButton.onClick.AddListener(() => LoadingSceneManager.Instance.LoadScene(SceneName.CardWarehouse, false));
     }
 
     public void SetActiveUI(bool isActive)
