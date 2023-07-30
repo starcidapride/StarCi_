@@ -11,7 +11,7 @@ public class AnimationUtility
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1);
 
-        GameObjectUtility.SetInteractability(transform);
+        GameObjectUtility.SetInteractability(transform, true);
     }
 
     public static IEnumerator ExecuteTriggerThenWait(Transform transform, string triggerName)
@@ -26,6 +26,8 @@ public class AnimationUtility
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1);
 
-        GameObjectUtility.SetInteractability(transform);
+        Debug.Log("End");
+
+        GameObjectUtility.SetInteractability(transform, true);
     }
 }

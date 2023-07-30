@@ -7,12 +7,22 @@ public class ModalManager : SingletonPersistent<ModalManager>
     [SerializeField]
     private Image backdropImage;
 
-    private bool modalActive;
+    public static bool ModalActive { get; set; } = false;
     private void Hide()
     {
+        StartCoroutine(HideCoroutine());
+    }
+
+    private IEnumerator HideCoroutine()
+    {
+        yield return AnimationUtility.ExecuteTriggerThenWait(
+            backdropImage.transform,
+            Constants.Triggers.FADE_OUT
+            );
+
         backdropImage.gameObject.SetActive(false);
 
-        modalActive = false;
+        ModalActive = false;
     }
 
     private void Show()
@@ -22,7 +32,7 @@ public class ModalManager : SingletonPersistent<ModalManager>
 
     private IEnumerator ShowCoroutine()
     {
-        modalActive = true;
+        ModalActive = true;
 
         backdropImage.gameObject.SetActive(true);
 
@@ -34,7 +44,7 @@ public class ModalManager : SingletonPersistent<ModalManager>
 
     private bool HasActived()
     {
-        return modalActive;
+        return ModalActive;
     }
 
     public void CreateModal(Transform modalPrefab)
@@ -64,22 +74,32 @@ public class ModalManager : SingletonPersistent<ModalManager>
 
     public void CloseNearestModal()
     {
+        StartCoroutine(CloseNearestModalCoroutine());
+    }
+
+    private IEnumerator CloseNearestModalCoroutine()
+    {
+        if (HasActived())
+        {
+            Hide();
+        }
+
         var numSiblings = backdropImage.transform.childCount;
 
-        if (numSiblings == 0) return;
+        if (numSiblings == 0) yield break;
 
         var youngestSibling = backdropImage.transform.GetChild(numSiblings - 1);
 
         var closestYoungerSibling = GameObjectUtility.GetClosestSiblingGameObject(youngestSibling, true);
 
+        yield return AnimationUtility.ExecuteTriggerThenWait(youngestSibling, Constants.Triggers.END);
+        
         Destroy(youngestSibling.gameObject);
 
         if (closestYoungerSibling != null)
         {
             GameObjectUtility.SetInteractability(closestYoungerSibling, true);
-            return;
+            yield break;
         }
-
-        Hide();
     }
 }

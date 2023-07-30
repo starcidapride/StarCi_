@@ -14,10 +14,12 @@ public class LocalSessionManager : SingletonPersistent<LocalSessionManager>
         User = new User()
         {
             Username = username,
-            Picture = 0,
+            PictureIndex = 0,
             CardSleeveIndex = 0,
             DeckCollection = new DeckCollection()
         };
+
+        PlayerPrefsUtility.SaveToPlayPrefs(Constants.PlayerPrefs.USER, User);
     }
 
     public Deck GetSelectedDeck()
@@ -29,7 +31,7 @@ public class LocalSessionManager : SingletonPersistent<LocalSessionManager>
 public class User
 {
     public string Username { get; set; }
-    public int Picture { get; set; }
+    public int PictureIndex { get; set; }
     public int CardSleeveIndex { get; set; }
     public DeckCollection DeckCollection { get; set; }
 }

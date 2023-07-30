@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Collections;
 using System.ComponentModel;
 
-public class LoadingSceneManager : Singleton<LoadingSceneManager>
+public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
 {
     [SerializeField]
     private Transform createUserModalPrefab;
@@ -37,7 +37,7 @@ public class LoadingSceneManager : Singleton<LoadingSceneManager>
                 }
                 else
                 {
-                   // HomeManager.Instance.SetActiveUI(true);
+                    HomeManager.Instance.SetActiveUI(true);
                 }
 
                 break;
@@ -52,7 +52,7 @@ public class LoadingSceneManager : Singleton<LoadingSceneManager>
         }
     }
 
-    public void LoadScene(SceneName sceneToLoad, bool isNetworkSessionAction = true)
+    public void LoadScene(SceneName sceneToLoad, bool isNetworkSessionAction)
     {
         StartCoroutine(LoadSceneCoroutine(sceneToLoad, isNetworkSessionAction));
     }

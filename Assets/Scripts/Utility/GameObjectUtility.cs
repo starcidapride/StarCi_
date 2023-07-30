@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameObjectUtility
 {
-    public static void SetInteractability(Transform transform, bool isEnabled = true)
+    public static void SetInteractability(Transform transform, bool isEnabled)
     {
         var canvasGroup = transform.GetComponent<CanvasGroup>();
 
