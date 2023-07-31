@@ -278,18 +278,6 @@ public class CardWarehouseManager : Singleton<CardWarehouseManager>
         StartCoroutine(OnFindButtonClickCoroutine());
     }
 
-    public class EnumDescriptionComparer<TEnum> : IComparer<TEnum> where TEnum : Enum
-    {
-        public int Compare(TEnum x, TEnum y)
-        {
-            string descriptionX = EnumUtility.GetDescription(x);
-            string descriptionY = EnumUtility.GetDescription(y);
-
-            return string.Compare(descriptionX, descriptionY, StringComparison.OrdinalIgnoreCase);
-        }
-    }
-
-
     private IEnumerator OnFindButtonClickCoroutine()
     {
         GameObjectUtility.RemoveAllChildGameObjects(cardShowcaseContainer);
@@ -377,6 +365,17 @@ public class CardWarehouseManager : Singleton<CardWarehouseManager>
     }
 }
 
+public class EnumDescriptionComparer<TEnum> : IComparer<TEnum> where TEnum : Enum
+{
+    public int Compare(TEnum x, TEnum y)
+    {
+        string descriptionX = EnumUtility.GetDescription(x);
+        string descriptionY = EnumUtility.GetDescription(y);
+
+        return string.Compare(descriptionX, descriptionY, StringComparison.OrdinalIgnoreCase);
+    }
+}
+
 public enum CardTypeDropdown
 {
     None,
@@ -417,3 +416,5 @@ public enum EquipmentClassDropdown
 
     Defense
 }
+
+
