@@ -867,6 +867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createUserModalPrefab: {fileID: 2881853015143886953, guid: 0ac65e2530f139244b1f8bba95c9728e, type: 3}
+  createFirstDeckModalPrefab: {fileID: 2881853015143886953, guid: 9c0b39a65a4c02647b292c1ae63d5108, type: 3}
 --- !u!4 &1074723313
 Transform:
   m_ObjectHideFlags: 0
@@ -997,7 +998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backdrop: {fileID: 328358588}
-  messageBox: {fileID: 0}
+  messageBox: {fileID: 4310815900837200008, guid: 93f3297ec327efa499ea78e12beb5c25, type: 3}
 --- !u!1 &1488984140
 GameObject:
   m_ObjectHideFlags: 0

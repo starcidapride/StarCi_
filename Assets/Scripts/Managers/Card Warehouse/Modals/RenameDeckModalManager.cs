@@ -1,10 +1,9 @@
-﻿
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CreateFirstDeckModalManager: Singleton<CreateFirstDeckModalManager>
+public class RenameDeckModalManager : Singleton<RenameDeckModalManager>
 {
     [SerializeField]
     private TMP_InputField deckNameTextInput;
@@ -29,23 +28,15 @@ public class CreateFirstDeckModalManager: Singleton<CreateFirstDeckModalManager>
 
     private void OnConfirmButtonClick()
     {
-        var user = LocalSessionManager.Instance.User;
+        var selectedDeck = LocalSessionManager.Instance.GetSelectedDeck();
 
-        user.DeckCollection.Decks.Add(new Deck()
-        {
-            DeckName = deckName,
-            PlayDeck = new List<CardName>(),
-            CharacterDeck = new List<CardName>()
-        });
+        selectedDeck.DeckName = deckName;
 
-        user.DeckCollection.SelectedDeckIndex = 0;
-
-        LocalSessionManager.Instance.SaveToPlayerPrefs();
+        SelectDeckManager.Instance.UpdateDeckDropdownOptions();
 
         ModalManager.Instance.CloseNearestModal();
-
-        CardWarehouseManager.Instance.SetActiveUI(true);
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))

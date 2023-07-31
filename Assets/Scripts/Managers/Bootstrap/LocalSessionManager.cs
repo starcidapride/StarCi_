@@ -6,9 +6,18 @@ public class LocalSessionManager : SingletonPersistent<LocalSessionManager>
 
     private void Start()
     {
-        User = PlayerPrefsUtility.LoadFromPlayerPrefs<User>(Constants.PlayerPrefs.USER);
+        LoadFromPlayerPrefs();
     }
 
+    public void SaveToPlayerPrefs()
+    {
+        PlayerPrefsUtility.SaveToPlayerPrefs(Constants.PlayerPrefs.USER, User);
+    }
+
+    public void LoadFromPlayerPrefs()
+    {
+        User = PlayerPrefsUtility.LoadFromPlayerPrefs<User>(Constants.PlayerPrefs.USER);
+    }
     public void Initialize(string username)
     {
         User = new User()
@@ -23,7 +32,7 @@ public class LocalSessionManager : SingletonPersistent<LocalSessionManager>
             }
         };
 
-        PlayerPrefsUtility.SaveToPlayerPrefs(Constants.PlayerPrefs.USER, User);
+        SaveToPlayerPrefs();
     }
 
     public Deck GetSelectedDeck()

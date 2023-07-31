@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CreateNewDeckModalManager: Singleton<CreateNewDeckModalManager>
+public class CreateDeckModalManager: Singleton<CreateDeckModalManager>
 {
     [SerializeField]
     private TMP_InputField deckNameTextInput;
@@ -13,7 +13,7 @@ public class CreateNewDeckModalManager: Singleton<CreateNewDeckModalManager>
     private Button cancelButton;
 
     [SerializeField]
-    private Button submitButton;
+    private Button confirmButton;
 
     private string deckName;
     private void Start()
@@ -24,10 +24,10 @@ public class CreateNewDeckModalManager: Singleton<CreateNewDeckModalManager>
 
         cancelButton.onClick.AddListener(ModalManager.Instance.CloseNearestModal);
 
-        submitButton.onClick.AddListener(OnSubmitButtonClick);
+        confirmButton.onClick.AddListener(OnConfirmButtonClick);
     }
 
-    private void OnSubmitButtonClick()
+    private void OnConfirmButtonClick()
     {
         var user = LocalSessionManager.Instance.User;
 
@@ -40,12 +40,24 @@ public class CreateNewDeckModalManager: Singleton<CreateNewDeckModalManager>
 
         user.DeckCollection.SelectedDeckIndex = user.DeckCollection.Decks.Count - 1;
 
-        PlayerPrefsUtility.SaveToPlayerPrefs(Constants.PlayerPrefs.USER, user);
+        LocalSessionManager.Instance.SaveToPlayerPrefs();
 
         SelectDeckManager.Instance.UpdateDeckDropdownOptions();
 
         SelectDeckManager.Instance.InvokeOnSelectedDeckChanged();
 
         ModalManager.Instance.CloseNearestModal();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            OnConfirmButtonClick();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ModalManager.Instance.CloseNearestModal();
+        }
     }
 }

@@ -54,7 +54,7 @@ public class SelectDeckManager : Singleton<SelectDeckManager>
     {
         user.DeckCollection.SelectedDeckIndex = value;
 
-        PlayerPrefsUtility.SaveToPlayerPrefs(Constants.PlayerPrefs.USER, user);
+        LocalSessionManager.Instance.SaveToPlayerPrefs();
 
         InvokeOnSelectedDeckChanged();
     }

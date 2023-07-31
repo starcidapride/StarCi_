@@ -46,6 +46,24 @@ public class CardWarehouseManager : Singleton<CardWarehouseManager>
     [SerializeField]
     private Transform characterDeckContainer;
 
+    [SerializeField]
+    private Button createDeckButton;
+
+    [SerializeField]
+    private Transform createDeckModalPrefab;
+
+    [SerializeField]
+    private Button renameDeckButton;
+
+    [SerializeField]
+    private Transform renameDeckModalPrefab;
+
+    [SerializeField]
+    private Button deleteDeckButton;
+
+    [SerializeField]
+    private Button sortDeckButton;
+
     private string cardName;
     private CardTypeDropdown cardType;
     private CharacterRoleDropdown characterRole;
@@ -73,10 +91,34 @@ public class CardWarehouseManager : Singleton<CardWarehouseManager>
 
         SelectDeckManager.Instance.OnSelectedDeckChanged += OnSelectedDeckChanged; ;
 
+        createDeckButton.onClick.AddListener(() => ModalManager.Instance.CreateModal(createDeckModalPrefab));
+
+        renameDeckButton.onClick.AddListener(() => ModalManager.Instance.CreateModal(renameDeckModalPrefab));
+
+        sortDeckButton.onClick.AddListener(OnSortDeckButtonClick);
+
         IsFinishLoad = true;
     }
 
+    private void OnSortDeckButtonClick()
+    {
+        var selectedDeck = LocalSessionManager.Instance.GetSelectedDeck();
+
+        selectedDeck.PlayDeck.Sort(new EnumDescriptionComparer<CardName>());
+
+        selectedDeck.CharacterDeck.Sort(new EnumDescriptionComparer<CardName>());
+
+        UpdateComponentDecks();
+
+        LocalSessionManager.Instance.SaveToPlayerPrefs();
+    }
+
     private void OnSelectedDeckChanged()
+    {
+        UpdateComponentDecks();
+    }
+
+    private void UpdateComponentDecks()
     {
         UpdateComponentDeck(ComponentDeckType.Play, true);
         UpdateComponentDeck(ComponentDeckType.Character, true);
@@ -143,8 +185,7 @@ public class CardWarehouseManager : Singleton<CardWarehouseManager>
 
         componentDeck.Add(cardName);
 
-        PlayerPrefsUtility.SaveToPlayerPrefs(Constants.PlayerPrefs.USER,
-            LocalSessionManager.Instance.User);
+        LocalSessionManager.Instance.SaveToPlayerPrefs();
     }
 
     public void AddCard(CardName cardName, ComponentDeckType deckType)
@@ -164,11 +205,13 @@ public class CardWarehouseManager : Singleton<CardWarehouseManager>
             return;
         }
 
+        var cardNameString = EnumUtility.GetDescription(cardName);
+        var deckTypeString = deckType == ComponentDeckType.Play ? "play" : "character";
         var message = result switch
         {
-            CardAdditionResult.CardNotAllowed => $"Cannot add <b>{cardName}</b> to your {deckType} deck. The card is not allowed in this deck.",
-            CardAdditionResult.DeckReachedLimit => $"Cannot add <b>{cardName}</b> to your {deckType} deck. The deck has reached its card limit.",
-            CardAdditionResult.MaxCardOccurrences => $"Cannot add <b>{cardName}</b> to your {deckType} deck. The maximum card occurrences have been reached.",
+            CardAdditionResult.CardNotAllowed => $"Cannot add <b>{cardNameString}</b> to your {deckTypeString} deck. The card is not allowed in this deck.",
+            CardAdditionResult.DeckReachedLimit => $"Cannot add <b>{cardNameString}</b> to your {deckTypeString} deck. The deck has reached its card limit.",
+            CardAdditionResult.MaxCardOccurrences => $"Cannot add <b>{cardNameString}</b> to your {deckTypeString} deck. The maximum card occurrences have been reached.",
             _ => string.Empty
         };
 
@@ -199,7 +242,7 @@ public class CardWarehouseManager : Singleton<CardWarehouseManager>
 
         UpdateComponentDeck(deckType, true);
 
-        PlayerPrefsUtility.SaveToPlayerPrefs(Constants.PlayerPrefs.USER, LocalSessionManager.Instance.User);
+        LocalSessionManager.Instance.SaveToPlayerPrefs();
     }
 
     private void UpdateComponentDeck(ComponentDeckType componentDeckType, bool firstUpdate = false)
@@ -369,8 +412,8 @@ public class EnumDescriptionComparer<TEnum> : IComparer<TEnum> where TEnum : Enu
 {
     public int Compare(TEnum x, TEnum y)
     {
-        string descriptionX = EnumUtility.GetDescription(x);
-        string descriptionY = EnumUtility.GetDescription(y);
+         var descriptionX = EnumUtility.GetDescription(x);
+         var descriptionY = EnumUtility.GetDescription(y);
 
         return string.Compare(descriptionX, descriptionY, StringComparison.OrdinalIgnoreCase);
     }

@@ -34,6 +34,17 @@ public class CreateUserModalManager : Singleton<CreateUserModalManager>
         {
             ModalManager.Instance.CloseNearestModal();
         }
- 
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            OnConfirmButtonClick();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ModalManager.Instance.CloseNearestModal();
+        }
     }
 }
