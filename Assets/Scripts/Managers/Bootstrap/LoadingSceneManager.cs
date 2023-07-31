@@ -9,7 +9,9 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
     [SerializeField]
     private Transform createUserModalPrefab;
 
-    public static bool InputBlocked { get; set; } = false;
+    [SerializeField]
+    private Transform createFirstDeckModalPrefab;
+    public static bool IsInputBlocked { get; set; } = false;
     private void Start()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -43,8 +45,13 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
                 break;
 
             case SceneName.CardWarehouse:
-
+                if (user.DeckCollection.SelectedDeckIndex == -1)
+                {
+                    ModalManager.Instance.CreateModal(createFirstDeckModalPrefab);
+                } else
+                {
                     CardWarehouseManager.Instance.SetActiveUI(true);
+                }
                 break;
 
             //case SceneName.LobbyRoom:
@@ -60,7 +67,7 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
 
     private IEnumerator LoadSceneCoroutine(SceneName sceneToLoad, bool isNetworkSessionActive)
     {
-        InputBlocked = true;
+        IsInputBlocked = true;
 
         LoadingFadeEffectManager.Instance.FadeIn();
 
@@ -82,7 +89,7 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
 
         yield return new WaitUntil(() => LoadingFadeEffectManager.IsEndFadeOut);
 
-        InputBlocked = false;
+        IsInputBlocked = false;
     }
 
     private void LoadSceneLocal(SceneName sceneToLoad)
@@ -107,5 +114,8 @@ public enum SceneName
     Home,
 
     [Description("Card Warehouse")]
-    CardWarehouse
+    CardWarehouse,
+
+    [Description("Waiting Room")]
+    WaitingRoom
 }

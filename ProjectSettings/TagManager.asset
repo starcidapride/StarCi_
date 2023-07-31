@@ -44,3 +44,9 @@ TagManager:
   - name: UI
     uniqueID: 135400959
     locked: 0
+  - name: Drag Area
+    uniqueID: 3340461381
+    locked: 0
+  - name: New Layer 3
+    uniqueID: 1409524121
+    locked: 0

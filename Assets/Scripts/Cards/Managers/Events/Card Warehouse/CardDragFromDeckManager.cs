@@ -1,53 +1,64 @@
-﻿//using TMPro;
-//using UnityEngine;
-//using UnityEngine.EventSystems;
+﻿using System;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
-//using static CardUtils;
+public class CardDragFromDeckManager : CardEventManager, IBeginDragHandler, IDragHandler, IEndDragHandler
+{
+    private Transform oldParent;
+    private Vector2 oldLocalPosition;
+    private Type clickEvent = typeof(CardShowcaseClickEventManager);
 
-//public class CardDragFromDeckManager : CardEventManager, IBeginDragHandler, IDragHandler, IEndDragHandler
-//{      
-//    private Transform dragCard;
-//    private Vector2 localPosition;
-//    public void OnBeginDrag(PointerEventData eventData)
-//    {
-//        SetVisibility(transform, false);
+    private Vector2 distance;
 
-//        dragCard = InstantiateCard(CardName, CardWarehouseManager.Instance.DragArea);
-        
-//        dragCard.localScale = Vector3.one / 4;
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        oldParent = transform.parent;
 
-//        localPosition = GetMousePositionRelativeToRectTransform((RectTransform)transform);
-//    }
+        oldLocalPosition = transform.localPosition;
 
-//    public void OnDrag(PointerEventData eventData)
-//    {
-//        var mousePos = GetMousePos();
-      
-//        dragCard.position = mousePos - localPosition;
+        CardUtility.DetachEvent(transform, clickEvent);
 
-//    }
+        transform.SetParent(CardWarehouseManager.Instance.GetDragArea());
 
-//    public void OnEndDrag(PointerEventData eventData)
-//    {
-//        var cardPosition = dragCard.position;
+        transform.localScale = Vector3.one / 4;
 
-//        var map = GetMap();
+        distance = GameObjectUtility.GetMousePositionRelativeToRectTransform((RectTransform)transform);
+    }
 
-//        var inPlayDeck = map[CardName].Item1 != CardType.Character;
+    public void OnDrag(PointerEventData eventData)
+    {
+        var mousePos = GameObjectUtility.GetMousePos();
 
-//        if (inPlayDeck && !IsPositionInsideRectTransformArea(cardPosition, (RectTransform) CardWarehouseManager.Instance.PlayDeckContainer))
-//        {
-//            CardWarehouseManager.Instance.RemoveCard(CardName, ComponentDeckType.Play);
-//        }
-//        else if (!inPlayDeck && !IsPositionInsideRectTransformArea(cardPosition, (RectTransform) CardWarehouseManager.Instance.CharacterDeckContainer))
-//        {
-//            CardWarehouseManager.Instance.RemoveCard(CardName, ComponentDeckType.Character);
-//        } else
-//        {
-//            SetVisibility(transform, true);
-//        }
+        transform.position = mousePos - distance;
 
-//        Destroy(dragCard.gameObject);
-//    }
-//}
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+            var cardPosition = transform.position;
+
+            var dictionary = CardDictionary.GetCardDictionary();
+
+            var inPlayDeck = dictionary[CardName].Item1 != CardType.Character;
+
+            if (inPlayDeck && !GameObjectUtility.IsPositionInsideRectTransformArea(cardPosition, (RectTransform)CardWarehouseManager.Instance.GetPlayDeckContainer()))
+            {
+                CardWarehouseManager.Instance.RemoveCard(CardName, ComponentDeckType.Play);
+                Destroy(transform.gameObject);
+            }
+            else if (!inPlayDeck && !GameObjectUtility.IsPositionInsideRectTransformArea(cardPosition, (RectTransform)CardWarehouseManager.Instance.GetCharacterDeckContainer()))
+            {
+                CardWarehouseManager.Instance.RemoveCard(CardName, ComponentDeckType.Character);
+                Destroy(transform.gameObject);
+            }
+            else
+            {
+                transform.SetParent(oldParent);
+                transform.localPosition = oldLocalPosition;
+                CardUtility.AttachEvent(transform, clickEvent);
+        }  
+    }
+}
 

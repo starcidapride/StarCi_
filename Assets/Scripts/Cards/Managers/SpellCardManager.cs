@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 
-public class SpellCardManager : MonoBehaviour
+public class SpellCardManager : CardManager
 {
     [SerializeField]
     private Image cardImage;
@@ -10,14 +10,12 @@ public class SpellCardManager : MonoBehaviour
     [SerializeField]
     private TMP_Text cardNameText;
 
-    [SerializeField]
-    private TMP_Text descriptionText;
-
     public void SetAttributes(SpellCardAttributes attributes)
     {
+        CardName = attributes.CardName;
+
         cardImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.CardImage);
         cardNameText.text = EnumUtility.GetDescription(attributes.CardName);
-        descriptionText.text = attributes.Description;
     }
 }
 

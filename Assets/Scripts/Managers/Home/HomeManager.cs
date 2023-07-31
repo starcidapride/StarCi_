@@ -25,6 +25,8 @@ public class HomeManager : Singleton<HomeManager>
     private Transform editPictureModalPrefab;
 
     private User user;
+
+    public static bool IsFinishLoad { get; set; } = false;
     private IEnumerator Start()
     {
         yield return new WaitUntil(() => LoadingFadeEffectManager.IsEndFadeOut);
@@ -37,6 +39,13 @@ public class HomeManager : Singleton<HomeManager>
         editPictureButton.onClick.AddListener(() => ModalManager.Instance.CreateModal(editPictureModalPrefab));
 
         goToCardWarehouseButton.onClick.AddListener(() => LoadingSceneManager.Instance.LoadScene(SceneName.CardWarehouse, false));
+
+        IsFinishLoad = true;
+    }
+
+    private void OnDestroy()
+    {
+        IsFinishLoad = false;
     }
 
     public void SetActiveUI(bool isActive)
@@ -44,7 +53,7 @@ public class HomeManager : Singleton<HomeManager>
         StartCoroutine(SetActiveUICoroutine(isActive));
     }
 
-    public IEnumerator SetActiveUICoroutine(bool isActive)
+    private IEnumerator SetActiveUICoroutine(bool isActive)
     {
         if (isActive)
         {

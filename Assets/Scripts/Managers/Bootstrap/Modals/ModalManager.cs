@@ -25,6 +25,8 @@ public class ModalManager : SingletonPersistent<ModalManager>
         backdropImage.gameObject.SetActive(false);
 
         ModalActive = false;
+
+        LoadingSceneManager.IsInputBlocked = false;
     }
 
     private void Show()
@@ -34,6 +36,8 @@ public class ModalManager : SingletonPersistent<ModalManager>
 
     private IEnumerator ShowCoroutine()
     {
+        LoadingSceneManager.IsInputBlocked = true;
+
         ModalActive = true;
 
         backdropImage.gameObject.SetActive(true);

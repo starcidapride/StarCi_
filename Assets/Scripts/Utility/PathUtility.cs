@@ -43,15 +43,18 @@ public class PathUtility
     {
         try
         {
+            var cardNameDescription = EnumUtility.GetDescription(cardName);
+
             var cardPath = "Images/Cards";
             var dictionary = CardDictionary.GetCardDictionary();
-        var path = dictionary[cardName].Item1 switch
-        {
-            CardType.Character => $"{cardPath}/Characters/{cardName}/Image",
-            CardType.Equipment => $"{cardPath}/Equipments/{cardName}/Image",
-            CardType.Spell => $"{cardPath}/Spells/{cardName}/Image",
-            _ => $"{cardPath}/Others/{cardName}/Image",
-        };
+            
+            var path = dictionary[cardName].Item1 switch
+            {
+                CardType.Character => $"{cardPath}/Characters/{cardNameDescription}/Image",
+                CardType.Equipment => $"{cardPath}/Equipments/{cardNameDescription}",
+                CardType.Spell => $"{cardPath}/Spells/{cardNameDescription}",
+                _ => $"{cardPath}/Others/{cardNameDescription}",
+            };
 
             return Resources.Load<Texture2D>(path);
         }
@@ -66,20 +69,23 @@ public class PathUtility
     {
         try
         {
+            var cardNameDescription = EnumUtility.GetDescription(cardName);
+
             var characterPath = "Images/Cards/Characters";
             var dictionary = CardDictionary.GetCharacterCardDictionary();
 
             var path = abilitySymbol switch
             {
-                AbilitySymbol.Passive => $"{characterPath}/{cardName}/Passive",
-                AbilitySymbol.Q => $"{characterPath}/{cardName}/Q",
-                AbilitySymbol.E => $"{characterPath}/{cardName}/E",
-                _ => $"{characterPath}/{cardName}/R",
+                AbilitySymbol.Passive => $"{characterPath}/{cardNameDescription}/Passive",
+                AbilitySymbol.Q => $"{characterPath}/{cardNameDescription}/Q",
+                AbilitySymbol.E => $"{characterPath}/{cardNameDescription}/E",
+                _ => $"{characterPath}/{cardNameDescription}/R",
             };
 
             return Resources.Load<Texture2D>(path);
 
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             Debug.Log(ex);
             return null;
@@ -91,7 +97,8 @@ public class PathUtility
         try
         {
             return Resources.Load<Texture2D>($"Images/Cards/Frames/Others/{cardName}");
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             Debug.Log(ex);
             return null;
@@ -103,12 +110,12 @@ public class PathUtility
         try
         {
             var path = cardType switch
-        {
-            CardType.Character => $"Prefabs/Cards/Character Card",
-            CardType.Equipment => $"Prefabs/Cards/Equipment Card",
-            CardType.Spell => $"Prefabs/Cards/Spell Card",
-            _ => $"Prefabs/Cards/Other Card",
-        };
+            {
+                CardType.Character => $"Prefabs/Cards/Character Card",
+                CardType.Equipment => $"Prefabs/Cards/Equipment Card",
+                CardType.Spell => $"Prefabs/Cards/Spell Card",
+                _ => $"Prefabs/Cards/Other Card",
+            };
             return Resources.Load<Transform>(path);
         }
         catch (Exception ex)
@@ -117,4 +124,4 @@ public class PathUtility
             return null;
         }
     }
-
+}

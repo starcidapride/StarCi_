@@ -4,16 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterCardManager : MonoBehaviour
+public class CharacterCardManager : CardManager
 {
     [SerializeField]
     private Image cardImage;
 
     [SerializeField]
     private TMP_Text cardNameText;
-
-    [SerializeField]
-    private TMP_Text experienceText;
 
     [SerializeField]
     private TMP_Text characterRoleText;
@@ -32,9 +29,10 @@ public class CharacterCardManager : MonoBehaviour
 
     public void SetAttributes(CharacterCardAttributes attributes)
     {
+        CardName = attributes.CardName;
+
         cardImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.CardImage);
         cardNameText.text = EnumUtility.GetDescription(attributes.CardName);
-        experienceText.text = attributes.Experience.ToString();
         characterRoleText.text = EnumUtility.GetDescription(attributes.CharacterRole);
         passiveImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.PassiveImage);
         QImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.QImage);
@@ -47,7 +45,6 @@ public class CharacterCardAttributes
 {
     public Texture2D CardImage { get; set; }
     public CardName CardName { get; set; }
-    public int Experience { get; set; }
     public CharacterRole CharacterRole { get; set; }
     public Texture2D PassiveImage { get; set; }
     public Texture2D QImage { get; set; }

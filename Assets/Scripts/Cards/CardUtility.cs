@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-
-public class CardUtils
+public class CardUtility
 {
     private static ICharacterCard GetCharacterCardObject(CardName cardName)
     {
@@ -29,6 +28,8 @@ public class CardUtils
 
         var card = UnityEngine.Object.Instantiate(characterCardPrefab, parent);
 
+        card.name = EnumUtility.GetDescription(cardName);
+
         var attributes = new CharacterCardAttributes()
         {
             CardName = cardName,
@@ -37,7 +38,7 @@ public class CardUtils
 
             CharacterRole = cardClassObject.CharacterRole,
 
-            Experience = cardClassObject.Experience,
+            PassiveImage = cardClassObject.PassiveImage,
 
             QImage = cardClassObject.QImage,
 
@@ -75,15 +76,15 @@ public class CardUtils
 
         var card = UnityEngine.Object.Instantiate(equipmentCardPrefab, parent);
 
+        card.name = EnumUtility.GetDescription(cardName);
+
         var attributes = new EquipmentCardAttributes
         {
             CardName = cardName,
 
             CardImage = cardClassObject.Image,
 
-            Price = cardClassObject.Price,
-
-            Description = cardClassObject.Description
+            Price = cardClassObject.Price
         };
 
         var manager = card.GetComponent<EquipmentCardManager>();
@@ -115,6 +116,8 @@ public class CardUtils
         var cardClassObject = GetSpellCardObject(cardName);
 
         var card = UnityEngine.Object.Instantiate(spellCardPrefab, parent);
+
+        card.name = EnumUtility.GetDescription(cardName);
 
         var attributes = new SpellCardAttributes()
         {
@@ -159,9 +162,7 @@ public class CardUtils
 
             CardImage = cardClassObject.Image,
 
-            CardName = cardName,
-
-            Description = cardClassObject.Description,
+            CardName = cardName
         };
 
         var manager = card.GetComponent<OtherCardManager>();
@@ -187,7 +188,7 @@ public class CardUtils
         };
     }
 
-    public static Transform InstantiateAndSetupCard(CardName cardName, Vector2 position, Vector2 scale, Transform parent, List<Type> scripts = null)
+    public static Transform InstantiateAndSetupCard(CardName cardName, Transform parent, Vector2 position, Vector2 scale, List<Type> scripts = null)
     {
         var card = InstantiateCard(cardName, parent);
 
@@ -216,9 +217,9 @@ public class CardUtils
     }
 
 
-    public static IEnumerator InstantiateAndSetupCardCoroutine(CardName cardName, Vector2 position, Vector2 scale, Transform parent = null, List<Type> scripts = null)
+    public static IEnumerator InstantiateAndSetupCardCoroutine(CardName cardName, Transform parent, Vector2 position, Vector2 scale, List<Type> scripts = null)
     {
-        var card = InstantiateAndSetupCard(cardName, position, scale, parent, scripts);
+        var card = InstantiateAndSetupCard(cardName, parent, position, scale, scripts);
 
         yield return AnimationUtility.ExecuteTriggerThenWait(card, Constants.Triggers.FLIP_SELF);
     }
@@ -279,6 +280,60 @@ public class CardUtils
             return CardAdditionResult.MaxCardOccurrences;
 
         return CardAdditionResult.Success;
+    }
+
+    public static List<Type> DetachAllEvents(Transform card)
+    {
+        var components = card.GetComponents<CardEventManager>();
+        
+        var events = components.Select(component => component.GetType()).ToList();
+
+        var destroyedComponents = new List<Type>();
+
+        foreach (var component in components)
+        {
+            UnityEngine.Object.Destroy(component);
+        }
+
+        return events;
+    }
+
+    public static void DetachEvent(Transform card, Type _event)
+    {
+        try
+        {
+            var component = card.GetComponent(_event);
+
+            UnityEngine.Object.Destroy(component);
+        } catch (Exception ex) {
+            Debug.Log(ex);
+        }
+    }
+
+    public static void AttachAllEvents(Transform card, List<Type> events)
+    {
+        try
+        {
+            foreach (var eventType in events)
+            {
+                card.gameObject.AddComponent(eventType);
+            }
+        } catch (Exception ex)
+        {
+            Debug.Log(ex);
+        }
+    }
+
+    public static void AttachEvent(Transform card, Type _event)
+    {
+        try
+        {
+            card.gameObject.AddComponent(_event);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex);
+        }
     }
 
 }

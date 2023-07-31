@@ -6,7 +6,7 @@ public class LocalSessionManager : SingletonPersistent<LocalSessionManager>
 
     private void Start()
     {
-        User = PlayerPrefsUtility.LoadFromPlayPrefs<User>(Constants.PlayerPrefs.USER);
+        User = PlayerPrefsUtility.LoadFromPlayerPrefs<User>(Constants.PlayerPrefs.USER);
     }
 
     public void Initialize(string username)
@@ -17,9 +17,13 @@ public class LocalSessionManager : SingletonPersistent<LocalSessionManager>
             PictureIndex = 0,
             CardSleeveIndex = 0,
             DeckCollection = new DeckCollection()
+            {
+                SelectedDeckIndex = -1,
+                Decks = new List<Deck>()
+            }
         };
 
-        PlayerPrefsUtility.SaveToPlayPrefs(Constants.PlayerPrefs.USER, User);
+        PlayerPrefsUtility.SaveToPlayerPrefs(Constants.PlayerPrefs.USER, User);
     }
 
     public Deck GetSelectedDeck()

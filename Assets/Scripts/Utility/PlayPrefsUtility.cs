@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerPrefsUtility
 {
-    public static T LoadFromPlayPrefs<T>(string key) where T : class
+    public static T LoadFromPlayerPrefs<T>(string key) where T : class
     {
         string jsonString = PlayerPrefs.GetString(key);
 
@@ -17,7 +17,7 @@ public class PlayerPrefsUtility
         }
     }
 
-    public static void SaveToPlayPrefs(string key, object value)
+    public static void SaveToPlayerPrefs(string key, object value)
     {
         PlayerPrefs.SetString(key, JsonConvert.SerializeObject(value));
     }

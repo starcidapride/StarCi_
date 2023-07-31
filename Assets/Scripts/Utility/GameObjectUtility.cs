@@ -23,6 +23,34 @@ public class GameObjectUtility
         return parent.GetChild(siblingIndex);
     }
 
+    public static Vector2 GetMousePos()
+    {
+        var mousePos = Input.mousePosition;
+        return Camera.main.ScreenToWorldPoint(mousePos);
+    }
+
+    public static Vector2 GetMousePositionRelativeToRectTransform(RectTransform rect)
+    {
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, GetMousePos(), null, out Vector2 localPoint);
+        return localPoint * rect.localScale;
+    }
+
+    public static bool IsPositionInsideRectTransformArea(Vector2 position, RectTransform area)
+    {
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(area, position, null, out Vector2 localPosition))
+        {
+            return false;
+        }
+
+        var rect = area.rect;
+        return rect.Contains(localPosition);
+    }
+
+    public static bool IsMousePositionInsideRectTransformArea(RectTransform area)
+    {
+        return IsPositionInsideRectTransformArea(GetMousePos(), area);
+    }
+
     public static void RemoveAllChildGameObjects(Transform transform)
     {
         foreach (Transform child in transform)
@@ -30,5 +58,6 @@ public class GameObjectUtility
             UnityEngine.Object.Destroy(child.gameObject);
         }
     }
+
 
 }
