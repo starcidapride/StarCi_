@@ -220,7 +220,7 @@ public class CardUtility
     {
         var card = InstantiateAndSetupCard(cardName, parent, position, scale, scripts);
 
-        yield return AnimationUtility.ExecuteTriggerThenWait(card, Constants.Triggers.FLIP_SELF);
+        yield return AnimationUtility.ExecuteTriggerThenWait(card, TriggerName.FlipSelf);
     }
 
     public static Dictionary<AbilitySymbol, AbilityAttribute> GetAbilityAttributes(CardName cardName)

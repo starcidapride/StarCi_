@@ -93,7 +93,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardImage: {fileID: 3373639917222109750}
-  cardNameText: {fileID: 0}
 --- !u!95 &1832007900455857555
 Animator:
   serializedVersion: 5

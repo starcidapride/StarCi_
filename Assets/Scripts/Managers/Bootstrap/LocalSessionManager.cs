@@ -11,12 +11,12 @@ public class LocalSessionManager : SingletonPersistent<LocalSessionManager>
 
     public void SaveToPlayerPrefs()
     {
-        PlayerPrefsUtility.SaveToPlayerPrefs(Constants.PlayerPrefs.USER, User);
+        PlayerPrefsUtility.SaveToPlayerPrefs(PlayerPrefsKey.User, User);
     }
 
     public void LoadFromPlayerPrefs()
     {
-        User = PlayerPrefsUtility.LoadFromPlayerPrefs<User>(Constants.PlayerPrefs.USER);
+        User = PlayerPrefsUtility.LoadFromPlayerPrefs<User>(PlayerPrefsKey.User);
     }
     public void Initialize(string username)
     {

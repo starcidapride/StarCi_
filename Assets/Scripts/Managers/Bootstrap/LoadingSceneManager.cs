@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Collections;
 using System.ComponentModel;
+using Unity.Services.Lobbies.Models;
 
 public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
 {
@@ -103,6 +104,85 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
             EnumUtility.GetDescription(sceneToLoad),
             LoadSceneMode.Single);
     }
+
+    public void CreateRelayAndStartHost(string lobbyName, string lobbyDescription, bool lobbyPrivate = false)
+    {
+        StartCoroutine(CreateRelayAndStartHostCoroutine(lobbyName, lobbyDescription, lobbyPrivate));
+    }
+
+    public IEnumerator CreateRelayAndStartHostCoroutine(string lobbyName, string lobbyDescription, bool lobbyPrivate = false)
+    {
+        LoadingManager.Instance.Show();
+        try
+        {
+            var createRelayTask = RelayUtility.CreateRelay();
+
+            yield return new WaitUntil(() => createRelayTask.IsCompleted);
+
+            var relayCode = createRelayTask.Result;
+
+            if (relayCode == null) yield break;
+
+            var createLobbyTask = LobbyUtility.CreateLobby(lobbyName,
+                LocalSessionManager.Instance.User.Username,
+                lobbyDescription,
+                relayCode,
+                lobbyPrivate);
+
+            yield return new WaitUntil(() => createLobbyTask.IsCompleted);
+
+            var lobby = createLobbyTask.Result;
+
+            if (lobby == null) yield break;
+
+            PlayerPrefsUtility.SaveToPlayerPrefs(PlayerPrefsKey.Lobby, lobby);
+
+            LoadScene(SceneName.WaitingRoom, true);
+
+            NetworkManager.Singleton.StartHost();
+
+        }
+        finally
+        {
+            LoadingManager.Instance.Hide();
+        }
+    }
+
+    public void JoinRelayAndStartClient(Lobby lobby)
+    {
+        StartCoroutine(JoinRelayAndStartClientCoroutine(lobby));
+    }
+
+    private IEnumerator JoinRelayAndStartClientCoroutine(Lobby lobby)
+    {
+        LoadingManager.Instance.Show();
+        try
+        {
+            var joinCode = lobby.Data[EnumUtility.GetDescription(LobbyKey.RelayCode)].Value;
+
+            var resultTask = RelayUtility.JoinRelay(joinCode);
+
+            yield return new WaitUntil(() => resultTask.IsCompleted);
+
+            if (!resultTask.Result) yield break;
+
+            LoadingFadeEffectManager.Instance.FadeIn();
+
+            yield return new WaitUntil(() => LoadingFadeEffectManager.IsEndFadeIn);
+
+            NetworkManager.Singleton.StartClient();
+
+            yield return new WaitForSeconds(1f);
+
+            LoadingFadeEffectManager.Instance.FadeOut();
+        }
+        finally
+        {
+            LoadingManager.Instance.Hide();
+        }
+    }
+
+
 }
 
 public enum SceneName

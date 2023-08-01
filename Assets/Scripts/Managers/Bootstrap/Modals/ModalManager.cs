@@ -17,7 +17,7 @@ public class ModalManager : SingletonPersistent<ModalManager>
     {
         yield return AnimationUtility.ExecuteTriggerThenWait(
             backdropImage.transform,
-            Constants.Triggers.FADE_OUT
+            TriggerName.FadeOut
             );
 
         yield return new WaitUntil(() => modalInstance.gameObject != null );
@@ -44,7 +44,7 @@ public class ModalManager : SingletonPersistent<ModalManager>
 
         yield return AnimationUtility.ExecuteTriggerThenWait(
             backdropImage.transform, 
-            Constants.Triggers.FADE_IN
+            TriggerName.FadeIn
             );
     }
 
@@ -101,7 +101,7 @@ public class ModalManager : SingletonPersistent<ModalManager>
 
         var closestYoungerSibling = GameObjectUtility.GetClosestSiblingGameObject(youngestSibling, true);
 
-        yield return AnimationUtility.ExecuteTriggerThenWait(youngestSibling, Constants.Triggers.END);
+        yield return AnimationUtility.ExecuteTriggerThenWait(youngestSibling, TriggerName.End);
         
         Destroy(youngestSibling.gameObject);
 

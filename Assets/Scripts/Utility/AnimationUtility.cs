@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
 
 public class AnimationUtility
@@ -14,13 +15,13 @@ public class AnimationUtility
         GameObjectUtility.SetInteractability(transform, true);
     }
 
-    public static IEnumerator ExecuteTriggerThenWait(Transform transform, string triggerName)
+    public static IEnumerator ExecuteTriggerThenWait(Transform transform, TriggerName triggerName)
     {
         var animator = transform.GetComponent<Animator>();
 
         GameObjectUtility.SetInteractability(transform, false);
 
-        animator.SetTrigger(triggerName);
+        animator.SetTrigger(EnumUtility.GetDescription(triggerName));
 
         yield return new WaitForSeconds(0.1f);
 
@@ -30,4 +31,19 @@ public class AnimationUtility
 
         GameObjectUtility.SetInteractability(transform, true);
     }
+}
+
+public enum TriggerName
+{
+    [Description("Fade In")]
+    FadeIn,
+
+    [Description("Fade Out")]
+    FadeOut,
+
+    [Description("Flip Self")]
+    FlipSelf,
+
+    [Description("End")]
+    End
 }
