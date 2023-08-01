@@ -11,6 +11,12 @@
         public static readonly string FLIP_SELF = "Flip Self";
     }
 
+    public class GameObjectNames
+    {
+        public static readonly string CARD_DETAILS = "Card Details";
+    }
+
+
     public class PlayerPrefs
     {
         public static readonly string USER = "User";

@@ -9,35 +9,11 @@ public class CharacterCardManager : CardManager
     [SerializeField]
     private Image cardImage;
 
-    [SerializeField]
-    private TMP_Text cardNameText;
-
-    [SerializeField]
-    private TMP_Text characterRoleText;
-
-    [SerializeField]
-    private Image passiveImage;
-
-    [SerializeField]
-    private Image QImage;
-
-    [SerializeField]
-    private Image EImage;
-
-    [SerializeField]
-    private Image RImage;
-
     public void SetAttributes(CharacterCardAttributes attributes)
     {
         CardName = attributes.CardName;
 
         cardImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.CardImage);
-        cardNameText.text = EnumUtility.GetDescription(attributes.CardName);
-        characterRoleText.text = EnumUtility.GetDescription(attributes.CharacterRole);
-        passiveImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.PassiveImage);
-        QImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.QImage);
-        EImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.EImage);
-        RImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.RImage);
     }
 }
 

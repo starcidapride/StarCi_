@@ -6,7 +6,7 @@ using System.Linq;
 
 public class CardUtility
 {
-    private static ICharacterCard GetCharacterCardObject(CardName cardName)
+    public static ICharacterCard GetCharacterCardObject(CardName cardName)
     {
         var dictionary = CardDictionary.GetCharacterCardDictionary();
 
@@ -54,7 +54,7 @@ public class CardUtility
         return card;
     }
 
-    private static IEquipmentCard GetEquipmentCardObject(CardName cardName)
+    public static IEquipmentCard GetEquipmentCardObject(CardName cardName)
     {
         var dictionary = CardDictionary.GetEquipmentCardDictionary();
 
@@ -94,7 +94,7 @@ public class CardUtility
         return card;
     }
 
-    private static ISpellCard GetSpellCardObject(CardName cardName)
+    public static ISpellCard GetSpellCardObject(CardName cardName)
     {
         var dictionary = CardDictionary.GetSpellCardDictionary();
 
@@ -135,7 +135,7 @@ public class CardUtility
         return card;
     }
 
-    private static IOtherCard GetOtherCardObject(CardName cardName)
+    public static IOtherCard GetOtherCardObject(CardName cardName)
     {
         var dictionary = CardDictionary.GetOtherCardDictionary();
 
@@ -204,9 +204,8 @@ public class CardUtility
                 {
                     var cardEventController = card.gameObject.AddComponent(script);
 
-                    if (cardEventController is CardEventManager)
+                    if (cardEventController is CardEventManager cardEvent)
                     {
-                        var cardEvent = (CardEventManager)cardEventController;
                         cardEvent.CardName = cardName;
                     }
                 }
@@ -334,6 +333,12 @@ public class CardUtility
         {
             Debug.Log(ex);
         }
+    }
+
+    public static CardType GetCardType(CardName cardName)
+    {
+        var dictionary = CardDictionary.GetCardDictionary();
+        return dictionary[cardName].Item1;
     }
 
 }

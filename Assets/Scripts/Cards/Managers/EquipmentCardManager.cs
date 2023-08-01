@@ -7,19 +7,11 @@ public class EquipmentCardManager : CardManager
     [SerializeField]
     private Image cardImage;
 
-    [SerializeField]
-    private TMP_Text cardNameText;
-
-    [SerializeField]
-    private TMP_Text priceText;
-
     public void SetAttributes(EquipmentCardAttributes attributes)
     {
         CardName = attributes.CardName;
 
         cardImage.sprite = ImageUtility.CreateSpriteFromTexture(attributes.CardImage);
-        cardNameText.text = EnumUtility.GetDescription(attributes.CardName);
-        priceText.text = attributes.Price.ToString();
     }
 }
 
