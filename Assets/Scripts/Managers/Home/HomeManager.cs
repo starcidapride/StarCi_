@@ -24,6 +24,12 @@ public class HomeManager : Singleton<HomeManager>
     [SerializeField]
     private Transform editPictureModalPrefab;
 
+    [SerializeField]
+    private Button goToLobbyRoomButton;
+
+    [SerializeField]
+    private Button quickPlayButton;
+
     private User user;
 
     public static bool IsFinishLoad { get; set; } = false;
@@ -40,7 +46,18 @@ public class HomeManager : Singleton<HomeManager>
 
         goToCardWarehouseButton.onClick.AddListener(() => LoadingSceneManager.Instance.LoadScene(SceneName.CardWarehouse, false));
 
+        goToLobbyRoomButton.onClick.AddListener(() => LoadingSceneManager.Instance.LoadScene(SceneName.LobbyRoom, false));
+
+        quickPlayButton.onClick.AddListener(OnQuickPlayButtonClick);
+
         IsFinishLoad = true;
+    }
+
+    private async void OnQuickPlayButtonClick()
+    {
+        var lobby = await LobbyUtility.QuickJoinLobby();
+
+        LoadingSceneManager.Instance.JoinRelayAndStartClient(lobby);
     }
 
     private void OnDestroy()

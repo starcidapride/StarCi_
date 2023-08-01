@@ -859,7 +859,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1699013084343955686, guid: 88fbd472b2c9cc849bb718b012146a1d, type: 3}
       propertyPath: m_PreferredWidth
-      value: 400
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 3470938735077668329, guid: 88fbd472b2c9cc849bb718b012146a1d, type: 3}
       propertyPath: m_Pivot.x
@@ -1108,9 +1108,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tableBody: {fileID: 0}
   createLobbyButton: {fileID: 0}
-  joinLobbyByCodeButton: {fileID: 0}
+  joinWithCodeButton: {fileID: 0}
   joinLobbyButton: {fileID: 0}
   bodyRowPrefab: {fileID: 0}
+  createLobbyModalPrefab: {fileID: 0}
+  joinWithCodePrefab: {fileID: 0}
 --- !u!1001 &1265973349
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1617,11 +1619,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 815119912857279008, guid: 88fbd472b2c9cc849bb718b012146a1d, type: 3}
       propertyPath: m_Name
-      value: Join By Code Button
+      value: Join With Code Button
       objectReference: {fileID: 0}
     - target: {fileID: 1699013084343955686, guid: 88fbd472b2c9cc849bb718b012146a1d, type: 3}
       propertyPath: m_PreferredWidth
-      value: 600
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 3470938735077668329, guid: 88fbd472b2c9cc849bb718b012146a1d, type: 3}
       propertyPath: m_Pivot.x
@@ -1709,7 +1711,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6998654521225065470, guid: 88fbd472b2c9cc849bb718b012146a1d, type: 3}
       propertyPath: m_text
-      value: Join Lobby By Code
+      value: Join With Code
+      objectReference: {fileID: 0}
+    - target: {fileID: 8147762554481770872, guid: 88fbd472b2c9cc849bb718b012146a1d, type: 3}
+      propertyPath: m_PreferredWidth
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88fbd472b2c9cc849bb718b012146a1d, type: 3}

@@ -196,6 +196,9 @@ public enum SceneName
     [Description("Card Warehouse")]
     CardWarehouse,
 
+    [Description("Lobby Room")]
+    LobbyRoom,
+
     [Description("Waiting Room")]
     WaitingRoom
 }

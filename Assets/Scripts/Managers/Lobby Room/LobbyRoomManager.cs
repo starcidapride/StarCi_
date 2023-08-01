@@ -12,7 +12,7 @@ public class LobbyRoomManager : Singleton<LobbyRoomManager>
     private Button createLobbyButton;
 
     [SerializeField] 
-    private Button joinLobbyByCodeButton;
+    private Button joinWithCodeButton;
 
     [SerializeField]
     private Button joinLobbyButton;
@@ -20,4 +20,22 @@ public class LobbyRoomManager : Singleton<LobbyRoomManager>
     [SerializeField]
     private Transform bodyRowPrefab;
 
+    [SerializeField]
+    private Transform createLobbyModalPrefab;
+
+    [SerializeField]
+    private Transform joinWithCodePrefab;
+
+    private void Start()
+    {
+        createLobbyButton.onClick.AddListener(() => ModalManager.Instance.CreateModal(createLobbyModalPrefab));
+        joinWithCodeButton.onClick.AddListener(() => ModalManager.Instance.CreateModal(joinWithCodePrefab));
+
+        joinLobbyButton.onClick.AddListener(OnJoinLobbyButtonClick);
+    }
+
+    private void OnJoinLobbyButtonClick()
+    {
+
+    }
 }
