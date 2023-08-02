@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using Unity.Collections;
 using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
@@ -6,10 +7,11 @@ using UnityEngine;
 
 public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionManager>
 {
+    private Lobby lobby;
+
     public NetworkVariable<NetworkLobby> NetworkLobby = new();
     public NetworkVariable<NetworkPlayerDatas> NetworkPlayerDatas = new();
 
-    private Lobby lobby;
     public FixedString64Bytes PlayerId { get; set; }
 
     public ulong ClientId { get; set; }
@@ -17,9 +19,18 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
     public static bool IsFinishLoad { get; set; } = false;
 
     public void Start()
-    {
+    {   
         NetworkManager.Singleton.OnServerStopped += OnServerStopped;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+    }
+
+    public void Update()
+    {
+        if (NetworkManager.Singleton.IsListening)
+        {
+            Debug.Log("Network Lobby : " + JsonConvert.SerializeObject(NetworkLobby.Value));
+            Debug.Log("Network Player Datas : " + JsonConvert.SerializeObject(NetworkPlayerDatas.Value));
+        }
     }
 
     private async void OnServerStopped(bool obj)
@@ -29,6 +40,8 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
         LobbyUtility.StopHeartbeat = true;
 
         await LobbyUtility.DeleteLobby(lobby.Id);
+
+        PlayerPrefsUtility.RemoveFromPlayPrefs(PlayerPrefsKey.Lobby);
 
         lobby = null;
     }
@@ -59,6 +72,14 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
         if (IsHost)
         {
             lobby = PlayerPrefsUtility.LoadFromPlayerPrefs<Lobby>(PlayerPrefsKey.Lobby);
+
+            NetworkLobby.Value = new()
+            {
+                LobbyId = lobby.Id,
+                LobbyName = lobby.Name,
+                LobbyCode = lobby.LobbyCode,
+                IsPrivate = lobby.IsPrivate
+            };
 
             NetworkPlayerDatas.Value = new()
             {
@@ -121,13 +142,6 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
 
     public override void OnNetworkDespawn()
     {
-        if (IsHost)
-        {
-            NetworkLobby = new();
-
-            NetworkPlayerDatas = new();
-        }
-
         IsFinishLoad = false;
     }
 }

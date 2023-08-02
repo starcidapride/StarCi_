@@ -8,6 +8,10 @@ public class BootstrapManager : Singleton<BootstrapManager>
     {   
         yield return new WaitUntil(() => LoadingSceneManager.Instance != null);
 
+        var authenticationTask = AuthenticationUtility.InitiateAnonymousSignIn();
+
+        yield return new WaitUntil(() => authenticationTask.IsCompleted);
+
         LoadingSceneManager.Instance.LoadScene(SceneName.Home, false);
     }
 }

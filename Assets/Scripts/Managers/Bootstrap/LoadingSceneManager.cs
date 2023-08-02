@@ -56,8 +56,8 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
                 break;
 
             case SceneName.LobbyRoom:
-               LobbyRoomManager.Instance.SetActiveUI(true);
-               break;
+                LobbyRoomManager.Instance.SetActiveUI(true);
+                break;
 
             case SceneName.WaitingRoom:
                 WaitingRoomManager.Instance.SetActiveUI(true);
@@ -109,12 +109,12 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
             LoadSceneMode.Single);
     }
 
-    public void CreateRelayAndStartHost(string lobbyName, string lobbyDescription, bool lobbyPrivate = false)
+    public void CreateRelayAndStartHost(string lobbyName, string lobbyDescription, bool lobbyPrivate)
     {
         StartCoroutine(CreateRelayAndStartHostCoroutine(lobbyName, lobbyDescription, lobbyPrivate));
     }
 
-    public IEnumerator CreateRelayAndStartHostCoroutine(string lobbyName, string lobbyDescription, bool lobbyPrivate = false)
+    public IEnumerator CreateRelayAndStartHostCoroutine(string lobbyName, string lobbyDescription, bool lobbyPrivate)
     {
         LoadingManager.Instance.Show();
         try

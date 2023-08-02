@@ -9,34 +9,37 @@ public delegate void OnClickDelegate();
 public class AlertManager : SingletonPersistent<AlertManager>
 {
     [SerializeField]
-    private Image backdrop;
+    private Image backdropImage;
 
     [SerializeField]
     private Transform messageBox;
 
     private readonly float a = 0.5f;
+
+    private void Start()
+    {
+        var color = backdropImage.color;
+        color.a = a;
+
+        backdropImage.color = color;
+    }
+
     public void Hide()
     {
-        GameObjectUtility.RemoveAllChildGameObjects(backdrop.transform);
+        GameObjectUtility.RemoveAllChildGameObjects(backdropImage.transform);
 
-        backdrop.gameObject.SetActive(false);
+        backdropImage.gameObject.SetActive(false);
 
         LoadingSceneManager.IsInputBlocked = false;
     }
 
     public void Show(AlertCaption caption, string message, List<AlertButton> buttons = null)
     {
-        backdrop.gameObject.SetActive(true);
-
-        var color = backdrop.color;
-        
-        color.a = a;
-
-        backdrop.color = color;
+        backdropImage.gameObject.SetActive(true);
 
         LoadingSceneManager.IsInputBlocked = true;
 
-        GameObjectUtility.RemoveAllChildGameObjects(backdrop.transform);
+        GameObjectUtility.RemoveAllChildGameObjects(backdropImage.transform);
 
         AlertMessageBoxManager.Caption = caption;
 
@@ -44,7 +47,7 @@ public class AlertManager : SingletonPersistent<AlertManager>
 
         AlertMessageBoxManager.Buttons = buttons;
 
-        Instantiate(messageBox, backdrop.transform);
+        Instantiate(messageBox, backdropImage.transform);
     }
 
 }

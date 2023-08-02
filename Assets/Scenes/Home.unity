@@ -637,6 +637,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3470938735077668329, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
   m_PrefabInstance: {fileID: 971297313}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &971297315 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7983884376418275619, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
+  m_PrefabInstance: {fileID: 971297313}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1074400744 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2165146452828039807, guid: e74a891e48798c64dbe0365446a11060, type: 3}
@@ -692,8 +703,8 @@ MonoBehaviour:
   editPictureButton: {fileID: 221907021}
   goToCardWarehouseButton: {fileID: 1349645587}
   editPictureModalPrefab: {fileID: 2881853015143886953, guid: 7c29ca763a4faea4588a9ab85de69cc5, type: 3}
-  goToLobbyRoomButton: {fileID: 0}
-  quickPlayButton: {fileID: 0}
+  goToLobbyRoomButton: {fileID: 971297315}
+  quickPlayButton: {fileID: 1143037135}
 --- !u!1 &1106530968
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,6 +891,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3470938735077668329, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
   m_PrefabInstance: {fileID: 1143037133}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1143037135 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7983884376418275619, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
+  m_PrefabInstance: {fileID: 1143037133}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1349645585
 PrefabInstance:
   m_ObjectHideFlags: 0

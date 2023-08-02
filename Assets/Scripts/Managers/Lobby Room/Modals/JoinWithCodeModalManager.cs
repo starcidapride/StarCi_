@@ -33,6 +33,8 @@ public class JoinWithCodeModalManager : Singleton<JoinWithCodeModalManager>
         var lobby = await LobbyUtility.JoinLobbyByCode(lobbyCode);
 
         LoadingSceneManager.Instance.JoinRelayAndStartClient(lobby);
+
+        ModalManager.Instance.CloseNearestModal();
     }
 
     private void Update()

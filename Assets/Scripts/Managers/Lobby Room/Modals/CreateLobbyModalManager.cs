@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,7 +41,13 @@ public class CreateLobbyModalManager : Singleton<CreateLobbyModalManager>
 
     private void OnConfirmButtonClick()
     {
-        LoadingSceneManager.Instance.CreateRelayAndStartHostCoroutine(lobbyName, description);
+        StartCoroutine(OnConfirmButtonClickCoroutine());
+    }
+    private IEnumerator OnConfirmButtonClickCoroutine()
+    {
+        yield return LoadingSceneManager.Instance.CreateRelayAndStartHostCoroutine(lobbyName, description, isPrivate); ;
+
+        ModalManager.Instance.CloseNearestModal();
     }
 
     private void Update()
