@@ -29,6 +29,20 @@ public struct NetworkPlayerDatas : INetworkSerializable
         playerDatas.RemoveAt(index);
     }
 
+    public void Update(NetworkPlayerData item)
+    {
+        var index = playerDatas.FindIndex(playerData => playerData.PlayerSession.ClientId == item.PlayerSession.ClientId);
+
+        playerDatas[index] = item;
+    }
+
+    public ulong GetOtherClientId(ulong clientId)
+    {
+        return playerDatas
+            .Select(playerData => playerData.PlayerSession.ClientId)
+            .FirstOrDefault(_clientId => _clientId != clientId);
+    }
+
     public NetworkPlayerData GetByPlayerId(FixedString64Bytes playerId)
     {
         return playerDatas.FirstOrDefault(playerData => playerData.PlayerSession.PlayerId == playerId);
@@ -42,6 +56,11 @@ public struct NetworkPlayerDatas : INetworkSerializable
     public int GetIndexByClientId(ulong clientId)
     {
         return playerDatas.FindIndex(playerData => playerData.PlayerSession.ClientId == clientId);
+    }
+
+    public int GetOtherIndexByClientId(ulong clientId)
+    {
+        return playerDatas.FindIndex(playerData => playerData.PlayerSession.ClientId != clientId);
     }
 
     public NetworkPlayerData GetByClientId(ulong clientId)

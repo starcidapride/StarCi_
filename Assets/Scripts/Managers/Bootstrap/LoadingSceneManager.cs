@@ -164,6 +164,8 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
         {
             var joinCode = lobby.Data[EnumUtility.GetDescription(LobbyKey.RelayCode)].Value;
 
+            Debug.Log(joinCode);
+
             var resultTask = RelayUtility.JoinRelay(joinCode);
 
             yield return new WaitUntil(() => resultTask.IsCompleted);

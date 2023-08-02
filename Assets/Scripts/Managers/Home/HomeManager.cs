@@ -57,7 +57,11 @@ public class HomeManager : Singleton<HomeManager>
     {
         var lobby = await LobbyUtility.QuickJoinLobby();
 
-        LoadingSceneManager.Instance.JoinRelayAndStartClient(lobby);
+        if (lobby != null)
+        {
+            LoadingSceneManager.Instance.JoinRelayAndStartClient(lobby);
+        }
+        
     }
 
     private void OnDestroy()

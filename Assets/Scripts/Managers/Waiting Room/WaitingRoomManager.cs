@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -104,16 +105,16 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
 
         kickButton.onClick.AddListener(OnKickButtonClick);
 
+        readyButton.onClick.AddListener(OnReadyButtonClick);
+
         SetPlayerCard(Participant.You);
+    }
 
+    private void OnReadyButtonClick()
+    {
+        var currentStatus = yourReady.gameObject.activeSelf;
 
-        if (isHost)
-        {
-            DisableOpponentsCard();
-        } else
-        {
-            SetPlayerCard(Participant.Opponent);
-        }
+        NetworkSessionManager.Instance.ToggleReadyStatusServerRpc(!currentStatus);
     }
 
     private void OnKickButtonClick()
@@ -122,6 +123,10 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
               NetworkSessionManager.Instance.ClientId);
 
         NetworkManager.Singleton.DisconnectClient(opponent.PlayerSession.ClientId);
+
+        NetworkSessionManager.Instance.KickPlayer();
+
+        DisableOpponentsCard();
     }
 
     private void OnLeaveLobbyButtonClick()
@@ -157,7 +162,10 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
             var opponent = NetworkSessionManager.Instance.NetworkPlayerDatas.Value.GetOtherByPlayerId(
                NetworkSessionManager.Instance.PlayerId);
 
-            opponentsCard.color = Color.white; 
+            opponentsCard.color = ImageUtility.GetColorFromHexEnum(HexEnum.Ivory); 
+
+            opponentsCardContainer.gameObject.SetActive(true);
+
 
             opponentsPictureImage.sprite = ImageUtility.CreateSpriteFromTexture(PathUtility.LoadIndexedPicture(opponent.Player.PictureIndex));
 
@@ -196,4 +204,12 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
         opponentsCardContainer.gameObject.SetActive(false);
     }
 
+    public void SetStartButtonEnabled(bool isEnable)
+    {
+        startButton.interactable = isEnable;
+
+        startButton.GetComponent<Image>().color = isEnable
+            ? ImageUtility.GetColorFromHexEnum(HexEnum.Beige)
+            : ImageUtility.GetColorFromHexEnum(HexEnum.Gray);
+    }
 }

@@ -56,8 +56,12 @@ public class ImageUtility
 
 public enum HexEnum
 {
+    [Description("#FFFCF4")]
+    Ivory,
     [Description("#F5F5F5")]
     LightGray,
     [Description("#C8C8C8")]
-    Gray
+    Gray,
+    [Description("#F5EBE0")]
+    Beige
 }

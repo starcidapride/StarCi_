@@ -2054,7 +2054,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7581851510211853492, guid: 0fad7f4a546edf84db6f1458eae53d6c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 40
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7581851510211853492, guid: 0fad7f4a546edf84db6f1458eae53d6c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2411,6 +2411,18 @@ PrefabInstance:
       propertyPath: m_text
       value: Start
       objectReference: {fileID: 0}
+    - target: {fileID: 622892607985009798, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
+      propertyPath: m_Color.b
+      value: 0.78431374
+      objectReference: {fileID: 0}
+    - target: {fileID: 622892607985009798, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
+      propertyPath: m_Color.g
+      value: 0.78431374
+      objectReference: {fileID: 0}
+    - target: {fileID: 622892607985009798, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
+      propertyPath: m_Color.r
+      value: 0.78431374
+      objectReference: {fileID: 0}
     - target: {fileID: 815119912857279008, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
       propertyPath: m_Name
       value: Start Button
@@ -2497,6 +2509,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3470938735077668329, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7983884376418275619, guid: d726e362a7c3b6a4bae23fe65558b1c4, type: 3}
+      propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -3786,7 +3802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_Color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

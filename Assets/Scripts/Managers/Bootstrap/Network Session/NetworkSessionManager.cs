@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionManager>
 {
-    private Lobby lobby;
+    public Lobby Lobby { get; set; }
 
     public NetworkVariable<NetworkLobby> NetworkLobby = new();
     public NetworkVariable<NetworkPlayerDatas> NetworkPlayerDatas = new();
@@ -18,39 +18,48 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
 
     public static bool IsFinishLoad { get; set; } = false;
 
+    public async void KickPlayer()
+    {   
+        //await LobbyUtility.RemovePlayer(
+        //   Lobby,
+        //    NetworkPlayerDatas.Value.GetOtherIndexByClientId(
+        //        ClientId
+        //       ));
+    }
+
     public void Start()
     {   
         NetworkManager.Singleton.OnServerStopped += OnServerStopped;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
     }
-
+        
     public void Update()
     {
         if (NetworkManager.Singleton.IsListening)
         {
             Debug.Log("Network Lobby : " + JsonConvert.SerializeObject(NetworkLobby.Value));
-            Debug.Log("Network Player Datas : " + JsonConvert.SerializeObject(NetworkPlayerDatas.Value));
+            Debug.Log("Network Player Datas : " + JsonConvert.SerializeObject(NetworkPlayerDatas.Value));       
         }
     }
 
     private async void OnServerStopped(bool obj)
     {
-        lobby = PlayerPrefsUtility.LoadFromPlayerPrefs<Lobby>(PlayerPrefsKey.Lobby);
+        Lobby = PlayerPrefsUtility.LoadFromPlayerPrefs<Lobby>(PlayerPrefsKey.Lobby);
 
         LobbyUtility.StopHeartbeat = true;
 
-        await LobbyUtility.DeleteLobby(lobby.Id);
+        await LobbyUtility.DeleteLobby(Lobby.Id);
 
         PlayerPrefsUtility.RemoveFromPlayPrefs(PlayerPrefsKey.Lobby);
 
-        lobby = null;
+        Lobby = null;
     }
 
     private async void OnClientDisconnectCallback(ulong clientId)
     {
         if (IsHost)
         {
-            await LobbyUtility.RemovePlayer(lobby, NetworkPlayerDatas.Value.GetIndexByClientId(clientId));
+            await LobbyUtility.RemovePlayer(Lobby, NetworkPlayerDatas.Value.GetIndexByClientId(clientId));
         
             WaitingRoomManager.Instance.DisableOpponentsCard();
         } else
@@ -71,14 +80,14 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
 
         if (IsHost)
         {
-            lobby = PlayerPrefsUtility.LoadFromPlayerPrefs<Lobby>(PlayerPrefsKey.Lobby);
+            Lobby  = PlayerPrefsUtility.LoadFromPlayerPrefs<Lobby>(PlayerPrefsKey.Lobby);
 
             NetworkLobby.Value = new()
             {
-                LobbyId = lobby.Id,
-                LobbyName = lobby.Name,
-                LobbyCode = lobby.LobbyCode,
-                IsPrivate = lobby.IsPrivate
+                LobbyId = Lobby.Id,
+                LobbyName = Lobby.Name,
+                LobbyCode = Lobby.LobbyCode,
+                IsPrivate = Lobby.IsPrivate
             };
 
             NetworkPlayerDatas.Value = new()
@@ -88,7 +97,7 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
 
             LobbyUtility.StopHeartbeat = false;
 
-            LobbyUtility.MaintainLobbyHeartbeat(lobby.Id);    
+            LobbyUtility.MaintainLobbyHeartbeat(Lobby.Id);    
         }
 
        
@@ -131,14 +140,69 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
 
 
     [ServerRpc(RequireOwnership = false)]    
-    private void AddPlayerDataServerRpc(NetworkPlayerData networkPlayerData)
-    {   
+    private void AddPlayerDataServerRpc(NetworkPlayerData networkPlayerData, ServerRpcParams serverRpcParams = default)
+    {
+        var senderClientId = serverRpcParams.Receive.SenderClientId;
+
         var networkPlayerDatas = NetworkPlayerDatas.Value;
 
         networkPlayerDatas.Add(networkPlayerData);
 
         NetworkPlayerDatas.Value = networkPlayerDatas;
+        
+        if (ClientId != senderClientId)
+        {
+            AddPlayerDataClientRpc();
+        }
     }
+
+    [ClientRpc]
+    private void AddPlayerDataClientRpc()
+    {   
+        WaitingRoomManager.Instance.SetPlayerCard(Participant.Opponent);
+
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ToggleReadyStatusServerRpc(bool status, ServerRpcParams serverRpcParams = default)
+    {   
+        var senderClientId = serverRpcParams.Receive.SenderClientId;
+
+        var networkPlayerDatas = NetworkPlayerDatas.Value;
+
+        var sender = networkPlayerDatas.GetByClientId(senderClientId);
+
+        var player = sender.Player;
+
+        player.IsReady = status;
+
+        sender.Player = player;
+
+        networkPlayerDatas.Update(sender);
+
+        NetworkPlayerDatas.Value = networkPlayerDatas;
+
+        ToggleReadyStatusClientRpc(status, senderClientId);
+    }
+
+
+    [ClientRpc]
+    private void ToggleReadyStatusClientRpc(bool status, ulong clientId)
+    {
+            WaitingRoomManager.Instance.SetReadyStatus(
+                ClientId == clientId ? Participant.You : Participant.Opponent, 
+                status);
+
+        var networkPlayerDatas = NetworkPlayerDatas.Value;
+
+        WaitingRoomManager.Instance.SetStartButtonEnabled(
+             networkPlayerDatas.PlayerDatas.Count == 2
+        && IsHost
+        && networkPlayerDatas.GetByClientId(clientId).Player.IsReady
+        && networkPlayerDatas.GetOtherByClientId(clientId).Player.IsReady
+            );
+    }
+
 
     public override void OnNetworkDespawn()
     {
