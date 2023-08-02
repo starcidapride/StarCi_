@@ -35,7 +35,7 @@ public class HomeManager : Singleton<HomeManager>
     public static bool IsFinishLoad { get; set; } = false;
     private IEnumerator Start()
     {
-        yield return new WaitUntil(() => LoadingFadeEffectManager.IsEndFadeOut);
+        yield return new WaitUntil(() => ui.gameObject.activeSelf);
         user = LocalSessionManager.Instance.User;
 
         pictureImage.sprite = ImageUtility.CreateSpriteFromTexture(PathUtility.LoadIndexedPicture(user.PictureIndex));

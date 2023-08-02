@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class WaitingRoomManager : Singleton<WaitingRoomManager>
 {
     [SerializeField]
+    private Transform ui;
+
+    [SerializeField]
     private TMP_Text lobbyNameText;
 
     [SerializeField]
@@ -64,12 +67,40 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
     [SerializeField]
     private Button startButton;
 
+    public void SetActiveUI(bool isActive)
+    {
+        StartCoroutine(SetActiveUICoroutine(isActive));
+    }
+
+    private IEnumerator SetActiveUICoroutine(bool isActive)
+    {
+        if (isActive)
+        {
+            ui.gameObject.SetActive(true);
+
+            yield return AnimationUtility.WaitForAnimationCompletion(ui);
+        }
+        else
+        {
+            ui.gameObject.SetActive(false);
+        }
+    }
+
     private IEnumerator Start()
     {
-        yield return new WaitUntil(() => NetworkSessionManager.IsFinishLoad 
-        && LoadingFadeEffectManager.IsEndFadeOut);
+        yield return new WaitUntil(() => 
+        NetworkSessionManager.IsFinishLoad 
+        && ui.gameObject.activeSelf);
 
         var isHost = NetworkManager.Singleton.IsHost;
+
+        var lobby = NetworkSessionManager.Instance.NetworkLobby.Value;
+
+        lobbyNameText.text = lobby.LobbyName.ToString();
+
+        lobbyCodeText.text = lobby.LobbyCode.ToString();
+
+        leaveLobbyButton.onClick.AddListener(OnLeaveLobbyButtonClick);
 
         SetPlayerCard(Participant.You);
 
@@ -80,6 +111,13 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
         {
             SetPlayerCard(Participant.Opponent);
         }
+    }
+
+    private void OnLeaveLobbyButtonClick()
+    {
+        NetworkManager.Singleton.Shutdown();
+
+        LoadingSceneManager.Instance.LoadScene(SceneName.LobbyRoom, false);
     }
 
     public void SetPlayerCard(Participant participant)
@@ -105,7 +143,7 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
             yourIdle.gameObject.SetActive(!you.Player.IsReady);
         } else
         {
-            var opponent = NetworkSessionManager.Instance.NetworkPlayerDatas.Value.GetOtherPlayerByPlayerId(
+            var opponent = NetworkSessionManager.Instance.NetworkPlayerDatas.Value.GetOtherByPlayerId(
                NetworkSessionManager.Instance.PlayerId);
 
             opponentsCard.color = Color.white; 

@@ -750,29 +750,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 159157298}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02e66853a24a25044a67158d58e5f02f, type: 3}
+  m_Script: {fileID: 11500000, guid: 6249077b9db1f6240866b6fd7c57c232, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UI: {fileID: 125469615}
+  ui: {fileID: 0}
   lobbyNameText: {fileID: 0}
-  lobbyPrivate: {fileID: 0}
   lobbyCodeText: {fileID: 0}
-  yourPicture: {fileID: 0}
+  leaveLobbyButton: {fileID: 0}
+  editLobbyButton: {fileID: 0}
+  yourPictureImage: {fileID: 0}
+  yourUsernameText: {fileID: 0}
   yourHost: {fileID: 0}
-  yourUsername: {fileID: 0}
-  yourReadyStatus: {fileID: 0}
-  yourIdleStatus: {fileID: 0}
-  opponentsCard: {fileID: 2009927536}
-  opponentsContainer: {fileID: 134513072}
-  opponentsUsername: {fileID: 0}
-  opponentsPicture: {fileID: 0}
+  yourReady: {fileID: 0}
+  yourIdle: {fileID: 0}
+  opponentsCard: {fileID: 0}
+  opponentsCardContainer: {fileID: 0}
+  opponentsPictureImage: {fileID: 0}
+  opponentsUsernameText: {fileID: 0}
+  opponentsReady: {fileID: 0}
+  opponentsIdle: {fileID: 0}
   opponentsHost: {fileID: 0}
-  opponentsReadyStatus: {fileID: 0}
-  opponentsIdleStatus: {fileID: 0}
   kickButton: {fileID: 0}
   readyButton: {fileID: 0}
   startButton: {fileID: 0}
-  leaveButton: {fileID: 0}
 --- !u!1001 &244108981
 PrefabInstance:
   m_ObjectHideFlags: 0

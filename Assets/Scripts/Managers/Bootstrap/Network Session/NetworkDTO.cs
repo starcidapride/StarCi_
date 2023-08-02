@@ -33,9 +33,15 @@ public struct NetworkPlayerDatas : INetworkSerializable
     {
         return playerDatas.FirstOrDefault(playerData => playerData.PlayerSession.PlayerId == playerId);
     }
-    public NetworkPlayerData GetOtherPlayerByPlayerId(FixedString64Bytes playerId)
+
+    public NetworkPlayerData GetOtherByPlayerId(FixedString64Bytes playerId)
     {
         return playerDatas.FirstOrDefault(playerData => playerData.PlayerSession.PlayerId != playerId);
+    }
+
+    public int GetIndexByClientId(ulong clientId)
+    {
+        return playerDatas.FindIndex(playerData => playerData.PlayerSession.ClientId == clientId);
     }
 
     public NetworkPlayerData GetByClientId(ulong clientId)
@@ -43,7 +49,7 @@ public struct NetworkPlayerDatas : INetworkSerializable
         return playerDatas.FirstOrDefault(playerData => playerData.PlayerSession.ClientId == clientId);
     }
 
-    public NetworkPlayerData GetOtherPlayerByClientId(ulong clientId)
+    public NetworkPlayerData GetOtherByClientId(ulong clientId)
     {
         return playerDatas.FirstOrDefault(playerData => playerData.PlayerSession.ClientId != clientId);
     }

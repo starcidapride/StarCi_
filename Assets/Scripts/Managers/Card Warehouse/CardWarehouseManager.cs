@@ -72,7 +72,7 @@ public class CardWarehouseManager : Singleton<CardWarehouseManager>
     public static bool IsFinishLoad { get; set; } = false;
     private IEnumerator Start()
     {
-        yield return new WaitUntil(() => LoadingFadeEffectManager.IsEndFadeOut);
+        yield return new WaitUntil(() => ui.gameObject.activeSelf);
 
         cardName = cardNameTextInput.text;
         cardType = (CardTypeDropdown)cardTypeDropdownInput.value;

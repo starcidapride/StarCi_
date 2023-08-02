@@ -146,11 +146,11 @@ public class LobbyUtility
         }
     }
 
-    public static async Task<bool> RemovePlayer(Lobby lobby, ulong clientId)
+    public static async Task<bool> RemovePlayer(Lobby lobby, int playerIndex)
     {
         try
         {
-            await LobbyService.Instance.RemovePlayerAsync(lobby.Id, lobby.Players[(int)clientId].Id);
+            await LobbyService.Instance.RemovePlayerAsync(lobby.Id, lobby.Players[playerIndex].Id);
 
             return true;
         }

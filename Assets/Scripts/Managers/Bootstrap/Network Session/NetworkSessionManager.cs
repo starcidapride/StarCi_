@@ -15,6 +15,37 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
     private ulong clientId;
 
     public static bool IsFinishLoad { get; set; } = false;
+
+    public void Start()
+    {
+        NetworkManager.Singleton.OnServerStopped += OnServerStopped;
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnectCallback;
+    }
+
+    private async void OnServerStopped(bool obj)
+    {
+        lobby = PlayerPrefsUtility.LoadFromPlayerPrefs<Lobby>(PlayerPrefsKey.Lobby);
+
+        LobbyUtility.StopHeartbeat = true;
+
+        await LobbyUtility.DeleteLobby(lobby.Id);
+
+        lobby = null;
+    }
+
+    private async void OnClientDisconnectCallback(ulong clientId)
+    {
+        if (IsHost)
+        {
+            await LobbyUtility.RemovePlayer(lobby, NetworkPlayerDatas.Value.GetIndexByClientId(clientId));
+        
+            WaitingRoomManager.Instance.DisableOpponentsCard();
+        } else
+        {
+            LoadingSceneManager.Instance.LoadScene(SceneName.LobbyRoom, false);
+        }
+    }
+
     public override void OnNetworkSpawn()
     {
         clientId = NetworkManager.LocalClientId;
@@ -51,7 +82,7 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
             Player = new()
             {
                 Username = user.Username,
-                Picture = user.PictureIndex,
+                PictureIndex = user.PictureIndex,
                 CardSleeveIndex = user.CardSleeveIndex,
                 IsReady = false
             },
@@ -88,22 +119,13 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
         NetworkPlayerDatas.Value = networkPlayerDatas;
     }
 
-    public async override void OnNetworkDespawn()
+    public override void OnNetworkDespawn()
     {
         if (IsHost)
         {
-            lobby = PlayerPrefsUtility.LoadFromPlayerPrefs<Lobby>(PlayerPrefsKey.Lobby);
-
-            LobbyUtility.StopHeartbeat = true;
-
-            lobby = null;
-
             NetworkLobby = new();
 
             NetworkPlayerDatas = new();
-
-            await LobbyUtility.DeleteLobby(lobby.Id);
-
         }
 
         IsFinishLoad = false;

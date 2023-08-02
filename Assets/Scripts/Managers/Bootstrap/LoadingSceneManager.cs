@@ -55,9 +55,13 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
                 }
                 break;
 
-            //case SceneName.LobbyRoom:
-              //  LobbyRoomManager.Instance.SetActiveUI(true);
-             //   break;
+            case SceneName.LobbyRoom:
+               LobbyRoomManager.Instance.SetActiveUI(true);
+               break;
+
+            case SceneName.WaitingRoom:
+                WaitingRoomManager.Instance.SetActiveUI(true);
+                break;
         }
     }
 
