@@ -22,6 +22,11 @@ public class PlayerPrefsUtility
     {
         PlayerPrefs.SetString(EnumUtility.GetDescription(key), JsonConvert.SerializeObject(value));
     }
+
+    public static void RemoveFromPlayPrefs(PlayerPrefsKey key)
+    {
+        PlayerPrefs.DeleteKey(EnumUtility.GetDescription(key));
+    }
 }
 
 public enum PlayerPrefsKey

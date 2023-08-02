@@ -57,8 +57,8 @@ public class ImageUtility
 public enum HexEnum
 {
     [Description("#F5F5F5")]
-    Highlight,
+    LightGray,
     [Description("#C8C8C8")]
-    Pressed
+    Gray
 
 }

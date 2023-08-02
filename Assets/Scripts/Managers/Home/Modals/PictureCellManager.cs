@@ -32,7 +32,7 @@ public class PictureCellManager : MonoBehaviour, IPointerClickHandler, IPointerE
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        var color = ImageUtility.GetColorFromHexEnum(HexEnum.Highlight);
+        var color = ImageUtility.GetColorFromHexEnum(HexEnum.LightGray);
 
         image.color = color;
     }
