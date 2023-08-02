@@ -60,5 +60,4 @@ public enum HexEnum
     LightGray,
     [Description("#C8C8C8")]
     Gray
-
 }

@@ -102,7 +102,10 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
 
         leaveLobbyButton.onClick.AddListener(OnLeaveLobbyButtonClick);
 
+        kickButton.onClick.AddListener(OnKickButtonClick);
+
         SetPlayerCard(Participant.You);
+
 
         if (isHost)
         {
@@ -111,6 +114,14 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
         {
             SetPlayerCard(Participant.Opponent);
         }
+    }
+
+    private void OnKickButtonClick()
+    {
+        var opponent = NetworkSessionManager.Instance.NetworkPlayerDatas.Value.GetOtherByClientId(
+              NetworkSessionManager.Instance.ClientId);
+
+        NetworkManager.Singleton.DisconnectClient(opponent.PlayerSession.ClientId);
     }
 
     private void OnLeaveLobbyButtonClick()

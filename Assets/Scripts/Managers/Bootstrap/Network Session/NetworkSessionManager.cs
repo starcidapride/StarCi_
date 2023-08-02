@@ -12,7 +12,7 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
     private Lobby lobby;
     public FixedString64Bytes PlayerId { get; set; }
 
-    private ulong clientId;
+    public ulong ClientId { get; set; }
 
     public static bool IsFinishLoad { get; set; } = false;
 
@@ -48,7 +48,7 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
 
     public override void OnNetworkSpawn()
     {
-        clientId = NetworkManager.LocalClientId;
+        ClientId = NetworkManager.LocalClientId;
 
         PlayerId = Guid.NewGuid().ToString();
 
@@ -75,7 +75,7 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
         {
             PlayerSession = new()
             {
-                ClientId = clientId,
+                ClientId = ClientId,
                 PlayerId = PlayerId
             },
 
