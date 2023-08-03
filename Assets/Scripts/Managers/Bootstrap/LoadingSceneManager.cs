@@ -62,6 +62,10 @@ public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
             case SceneName.WaitingRoom:
                 WaitingRoomManager.Instance.SetActiveUI(true);
                 break;
+
+            case SceneName.PlayRoom:
+                PlayRoomManager.Instance.SetActiveUI(true);
+                break;
         }
     }
 
@@ -206,5 +210,8 @@ public enum SceneName
     LobbyRoom,
 
     [Description("Waiting Room")]
-    WaitingRoom
+    WaitingRoom,
+
+    [Description("Play Room")]
+    PlayRoom
 }

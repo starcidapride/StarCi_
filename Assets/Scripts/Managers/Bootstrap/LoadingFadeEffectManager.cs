@@ -43,12 +43,16 @@ public class LoadingFadeEffectManager : SingletonPersistent<LoadingFadeEffectMan
 
     public void FadeAll()
     {
+        transitionBackgroundCanvasGroup.gameObject.SetActive(true);
+
         transitionBackgroundCanvasGroup.DOFade(1f, fadeDuration).OnComplete(
             () =>
             {
                 DOVirtual.DelayedCall(1f, () =>
                 {
                     transitionBackgroundCanvasGroup.DOFade(0f, fadeDuration);
+
+                    transitionBackgroundCanvasGroup.gameObject.SetActive(false);
                 }
                 );
             }

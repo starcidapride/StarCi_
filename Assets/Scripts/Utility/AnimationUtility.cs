@@ -45,5 +45,12 @@ public enum TriggerName
     FlipSelf,
 
     [Description("End")]
-    End
+    End,
+
+    [Description("Flip In")]
+    FlipIn,
+
+    [Description("Flip Out")]
+    FlipOut,
+
 }

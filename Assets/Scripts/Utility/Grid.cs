@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 public class Cell
 {
@@ -138,13 +139,13 @@ public class Grid
     var cells = SplitSpriteIntoGridsWithMaxWidth(spriteObject, numRows, numCols, maxWidth, directionReversed);
     var map = new Dictionary<int, Cell>();
 
-    foreach (var cell in cells)
-    {
-        var position = cell.Key;
-        var index = position.Column + position.Row * numCols;
-        map.Add(index, cell.Value);
-    }
-    return map;
+        foreach (var (cell, index) in cells.Select((cell, index) => (cell, index)))
+        {
+            var position = cell.Key;
+            map.Add(index, cell.Value);
+        }
+
+        return map;
 }
 
 public static Dictionary<int, Cell> SplitSpriteIntoIndexedGrids(Transform spriteObject, int numRows, int numCols)
@@ -161,6 +162,7 @@ public static Dictionary<int, Cell> SplitSpriteIntoIndexedGrids(Transform sprite
 
     return map;
 }
+
 
 
 

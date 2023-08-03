@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using JetBrains.Annotations;
 
 public class CardUtility
 {
@@ -215,6 +216,18 @@ public class CardUtility
         return card;
     }
 
+    public static Transform InstantiateAndSetupCardWithSleeve(CardName cardName, Transform parent, Vector2 position, Vector2 scale, int cardSleeveIndex, List<Type> scripts = null)
+    {
+        var card = InstantiateAndSetupCard(cardName, parent, position, scale, scripts);
+
+        var cardSleeveManager = card.GetComponent<CardSleeveManager>();
+
+        cardSleeveManager.SetVisibility(true);
+
+        cardSleeveManager.SetImage(cardSleeveIndex);
+        
+        return card;
+    }
 
     public static IEnumerator InstantiateAndSetupCardCoroutine(CardName cardName, Transform parent, Vector2 position, Vector2 scale, List<Type> scripts = null)
     {

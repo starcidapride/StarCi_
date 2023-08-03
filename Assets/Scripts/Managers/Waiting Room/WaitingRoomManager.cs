@@ -107,12 +107,30 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
 
         readyButton.onClick.AddListener(OnReadyButtonClick);
 
+        startButton.onClick.AddListener(NetworkSessionManager.Instance.StartGameClientRpc);
+
         SetPlayerCard(Participant.You);
     }
 
     private void OnReadyButtonClick()
     {
         var currentStatus = yourReady.gameObject.activeSelf;
+
+        var networkPlayerDatas = NetworkSessionManager.Instance.NetworkPlayerDatas.Value;
+
+        var clientId = NetworkSessionManager.Instance.ClientId;
+
+        var sender = networkPlayerDatas.GetByClientId(clientId);
+
+        var player = sender.Player;
+
+        player.IsReady = !currentStatus;
+
+        sender.Player = player;
+
+        networkPlayerDatas.Update(sender);
+
+        NetworkSessionManager.Instance.UpdatePlayerDataServerRpc(networkPlayerDatas);
 
         NetworkSessionManager.Instance.ToggleReadyStatusServerRpc(!currentStatus);
     }
@@ -169,7 +187,7 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
 
             opponentsPictureImage.sprite = ImageUtility.CreateSpriteFromTexture(PathUtility.LoadIndexedPicture(opponent.Player.PictureIndex));
 
-            opponentsUsernameText.text = user.Username;
+            opponentsUsernameText.text = opponent.Player.Username.ToString();
 
             opponentsHost.gameObject.SetActive(!isHost);
 

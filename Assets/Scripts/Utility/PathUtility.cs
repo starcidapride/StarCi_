@@ -39,6 +39,20 @@ public class PathUtility
         }
     }
 
+    public static Texture2D LoadIndexedCardSleeve(int index)
+    {
+        try
+        {
+            return Resources.Load<Texture2D>($"Images/Cards/Sleeves/{index}");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex);
+            return null;
+        }
+    }
+
+
     public static Texture2D LoadCardImage(CardName cardName)
     {
         try

@@ -133,31 +133,33 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
             }
         };
 
-        AddPlayerDataServerRpc(connectedPlayer);
+        var networkPlayerDatas = NetworkPlayerDatas.Value;
+
+        networkPlayerDatas.Add(connectedPlayer);
+
+        NetworkPlayerDatas.Value = networkPlayerDatas;
+
+        UpdatePlayerDataServerRpc(networkPlayerDatas);
 
         IsFinishLoad = true;
     }
 
 
     [ServerRpc(RequireOwnership = false)]    
-    private void AddPlayerDataServerRpc(NetworkPlayerData networkPlayerData, ServerRpcParams serverRpcParams = default)
+    public void UpdatePlayerDataServerRpc(NetworkPlayerDatas networkPlayerDatas, ServerRpcParams serverRpcParams = default)
     {
         var senderClientId = serverRpcParams.Receive.SenderClientId;
-
-        var networkPlayerDatas = NetworkPlayerDatas.Value;
-
-        networkPlayerDatas.Add(networkPlayerData);
 
         NetworkPlayerDatas.Value = networkPlayerDatas;
         
         if (ClientId != senderClientId)
         {
-            AddPlayerDataClientRpc();
+            UpdatePlayerDataClientRpc();
         }
     }
 
     [ClientRpc]
-    private void AddPlayerDataClientRpc()
+    private void UpdatePlayerDataClientRpc()
     {   
         WaitingRoomManager.Instance.SetPlayerCard(Participant.Opponent);
 
@@ -167,20 +169,6 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
     public void ToggleReadyStatusServerRpc(bool status, ServerRpcParams serverRpcParams = default)
     {   
         var senderClientId = serverRpcParams.Receive.SenderClientId;
-
-        var networkPlayerDatas = NetworkPlayerDatas.Value;
-
-        var sender = networkPlayerDatas.GetByClientId(senderClientId);
-
-        var player = sender.Player;
-
-        player.IsReady = status;
-
-        sender.Player = player;
-
-        networkPlayerDatas.Update(sender);
-
-        NetworkPlayerDatas.Value = networkPlayerDatas;
 
         ToggleReadyStatusClientRpc(status, senderClientId);
     }
@@ -202,6 +190,26 @@ public class NetworkSessionManager : SingletonNetworkPersistent<NetworkSessionMa
         && networkPlayerDatas.GetOtherByClientId(clientId).Player.IsReady
             );
     }
+
+    [ClientRpc]
+    public void StartGameClientRpc()
+    {   
+        if (IsHost)
+        {
+            LoadingSceneManager.Instance.LoadScene(SceneName.PlayRoom, true);
+        } else
+        {
+            LoadingFadeEffectManager.Instance.FadeAll();
+        }
+    }
+
+    [ClientRpc]
+    public void PlayBothPlayerDrawACardClientRpc(int yourNumCards, int opponentsNumCards)
+    {
+        PlayRoomManager.Instance.PlayBothPlayerDrawACard(yourNumCards, opponentsNumCards);
+    }
+
+
 
 
     public override void OnNetworkDespawn()
