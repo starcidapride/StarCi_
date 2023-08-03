@@ -224,10 +224,6 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
 
     public void SetStartButtonEnabled(bool isEnable)
     {
-        startButton.interactable = isEnable;
-
-        startButton.GetComponent<Image>().color = isEnable
-            ? ImageUtility.GetColorFromHexEnum(HexEnum.Beige)
-            : ImageUtility.GetColorFromHexEnum(HexEnum.Gray);
+        Miscellaneous.SetButtonEnabled(startButton, isEnable);
     }
 }

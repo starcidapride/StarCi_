@@ -108,6 +108,29 @@ public struct NetworkPlayerDatas : INetworkSerializable
     }
 }
 
+public struct NetworkGameCentral : INetworkSerializable
+{
+    private int turnId;
+
+    private bool isYourTurn;
+    public int TurnId
+    {
+        get { return turnId; }
+        set { turnId = value; }
+    }
+
+    public bool IsYourTurn
+    {
+        get { return isYourTurn; }
+        set { isYourTurn = value; }
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref turnId);
+        serializer.SerializeValue(ref isYourTurn);
+    }
+}
 public struct NetworkLobby : INetworkSerializable
 {
     private FixedString32Bytes lobbyId;

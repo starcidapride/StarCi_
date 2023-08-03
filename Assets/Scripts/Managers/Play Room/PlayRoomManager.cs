@@ -1,7 +1,10 @@
 using DG.Tweening;
 using System.Collections;
+using System.ComponentModel;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayRoomManager : Singleton<PlayRoomManager>
 {
@@ -25,6 +28,21 @@ public class PlayRoomManager : Singleton<PlayRoomManager>
 
     [SerializeField]
     private Transform opponentsHand;
+
+    [SerializeField]
+    private TMP_Text currentTurnText;
+
+    [SerializeField]
+    private Button mainPhase1Button;
+
+    [SerializeField]
+    private Button combatPhaseButton;
+
+    [SerializeField]
+    private Button mainPhase2Button;
+
+    [SerializeField]
+    private Button endTurnButton;
 
     public void SetActiveUI(bool isActive)
     {
@@ -58,13 +76,19 @@ public class PlayRoomManager : Singleton<PlayRoomManager>
         PlaceComponentDeck(ComponentDeckType.Character, Participant.Opponent);
 
         if (isHost)
-        {
-            BothPlayerDrawACard();
-            yield return new WaitForSeconds(5f);
-            BothPlayerDrawACard();
-            yield return new WaitForSeconds(5f);
-            BothPlayerDrawACard();
+        {   
+            for (int i =  0; i < 5; i++)
+            {
+
+                BothPlayerDrawACard();
+                yield return new WaitForSeconds(1.1f);
+            }
         }
+
+        yield return new WaitUntil(() => GameCentralManager.IsFinishLoad);
+
+        // host start first
+        
     }
 
     public void PlaceComponentDeck(ComponentDeckType componentDeckType, Participant participant)
@@ -187,5 +211,26 @@ public class PlayRoomManager : Singleton<PlayRoomManager>
 
         yield return AnimationUtility.ExecuteTriggerThenWait(card, TriggerName.FlipOut);
     }
+
+    public void UpdateActionField(bool isYourTurn)
+    {
+            currentTurnText.text = isYourTurn ? EnumUtility.GetDescription(CurrentTurn.YourTurn) 
+                : EnumUtility.GetDescription(CurrentTurn.OpponentsTurn);
+
+            Miscellaneous.SetButtonEnabled(mainPhase1Button, isYourTurn);
+            Miscellaneous.SetButtonEnabled(combatPhaseButton, isYourTurn);
+            Miscellaneous.SetButtonEnabled(mainPhase2Button, isYourTurn);
+            Miscellaneous.SetButtonEnabled(endTurnButton, isYourTurn);
+        }
+    }
+
+
+public enum CurrentTurn
+{
+    [Description("Your Turn")]
+    YourTurn,
+
+    [Description("Opponent's Turn")]
+    OpponentsTurn
 }
 
