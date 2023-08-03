@@ -2,12 +2,12 @@
 
 public class Miscellaneous
 {
-    public static void SetButtonEnabled(Button button, bool isEnable)
+    public static void SetButtonEnabled(Button button, bool isEnable, HexEnum activeColor, HexEnum disableColor)
     {
         button.interactable = isEnable;
 
         button.GetComponent<Image>().color = isEnable
-            ? ImageUtility.GetColorFromHexEnum(HexEnum.Beige)
-            : ImageUtility.GetColorFromHexEnum(HexEnum.Gray);
+            ? ImageUtility.GetColorFromHexEnum(activeColor)
+            : ImageUtility.GetColorFromHexEnum(disableColor);
     }
 }

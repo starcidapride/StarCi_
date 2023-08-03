@@ -224,6 +224,6 @@ public class WaitingRoomManager : Singleton<WaitingRoomManager>
 
     public void SetStartButtonEnabled(bool isEnable)
     {
-        Miscellaneous.SetButtonEnabled(startButton, isEnable);
+        Miscellaneous.SetButtonEnabled(startButton, isEnable, HexEnum.Beige, HexEnum.Gray);
     }
 }

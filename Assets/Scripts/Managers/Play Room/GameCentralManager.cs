@@ -14,7 +14,8 @@ public class GameCentralManager : SingletonNetwork<GameCentralManager>
             {
                 TurnId = 0,
                 // host start first
-                IsYourTurn = true
+                IsHostTurn = true,
+                TurnPhase = TurnPhase.PrePhase
             };
         }
 
@@ -32,5 +33,35 @@ public class GameCentralManager : SingletonNetwork<GameCentralManager>
         {
             Debug.Log("Network Game Central : " + JsonConvert.SerializeObject(NetworkGameCentral.Value));
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateNetworkGameCentralServerRpc(NetworkGameCentral networkGameCentral)
+    {
+        NetworkGameCentral.Value = networkGameCentral;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void EndTurnServerRpc(bool isHostTurn)
+    {
+        EndTurnClientRpc(isHostTurn);
+    }
+
+    [ClientRpc]
+    public void EndTurnClientRpc(bool isHostTurn)
+    {
+        PlayRoomManager.Instance.UpdateActionField(IsHost == isHostTurn, TurnPhase.PrePhase);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void NextPhaseServerRpc(bool isHostTurn, TurnPhase phase)
+    {
+        NextPhaseClientRpc(isHostTurn, phase);
+    }
+
+    [ClientRpc]
+    public void NextPhaseClientRpc(bool isHostTurn, TurnPhase phase)
+    {
+        PlayRoomManager.Instance.UpdateActionField(IsHost == isHostTurn, phase);
     }
 }

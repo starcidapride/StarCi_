@@ -68,12 +68,30 @@ public class PlayRoomManager : Singleton<PlayRoomManager>
         NetworkSessionManager.IsFinishLoad
         && ui.gameObject.activeSelf);
 
+        mainPhase1Button.onClick.AddListener(() => OnPhaseButtonClick(TurnPhase.MainPhase1));
+        combatPhaseButton.onClick.AddListener(() => OnPhaseButtonClick(TurnPhase.CombatPhase));
+        mainPhase2Button.onClick.AddListener(() => OnPhaseButtonClick(TurnPhase.MainPhase2));
+
+        endTurnButton.onClick.AddListener(OnEndTurnButtonClick);
+
+
         var isHost = NetworkManager.Singleton.IsHost;
 
         PlaceComponentDeck(ComponentDeckType.Play, Participant.You);
         PlaceComponentDeck(ComponentDeckType.Character, Participant.You);
         PlaceComponentDeck(ComponentDeckType.Play, Participant.Opponent);
         PlaceComponentDeck(ComponentDeckType.Character, Participant.Opponent);
+
+        yield return new WaitUntil(() => GameCentralManager.IsFinishLoad);
+
+        var networkGameCentral = GameCentralManager.Instance.NetworkGameCentral.Value;
+
+        var isYourTurn = isHost == networkGameCentral.IsHostTurn;
+
+        currentTurnText.text = isYourTurn
+            ? EnumUtility.GetDescription(CurrentTurn.YourTurn)
+                : EnumUtility.GetDescription(CurrentTurn.OpponentsTurn);
+
 
         if (isHost)
         {   
@@ -85,10 +103,20 @@ public class PlayRoomManager : Singleton<PlayRoomManager>
             }
         }
 
-        yield return new WaitUntil(() => GameCentralManager.IsFinishLoad);
+        UpdateActionField(isYourTurn, TurnPhase.PrePhase);
+    }
 
-        // host start first
-        
+    private void OnPhaseButtonClick(TurnPhase turnPhase)
+    {
+        var networkGameCentral = GameCentralManager.Instance.NetworkGameCentral;
+
+        var networkGameCentralValue = networkGameCentral.Value;
+
+        networkGameCentralValue.TurnPhase = turnPhase;
+
+        GameCentralManager.Instance.UpdateNetworkGameCentralServerRpc(networkGameCentralValue);
+
+        GameCentralManager.Instance.NextPhaseServerRpc(networkGameCentralValue.IsHostTurn, turnPhase);
     }
 
     public void PlaceComponentDeck(ComponentDeckType componentDeckType, Participant participant)
@@ -119,6 +147,19 @@ public class PlayRoomManager : Singleton<PlayRoomManager>
                 componentDeck, Vector2.zero, Vector2.one / 2,
                 networkPlayerData.Player.CardSleeveIndex);
         }
+    }
+
+    private void OnEndTurnButtonClick()
+    {
+        var networkGameCentral = GameCentralManager.Instance.NetworkGameCentral;
+
+        var networkGameCentralValue = networkGameCentral.Value;
+
+        networkGameCentralValue.GoNextTurn();
+
+        GameCentralManager.Instance.UpdateNetworkGameCentralServerRpc(networkGameCentralValue);
+
+        GameCentralManager.Instance.EndTurnServerRpc(networkGameCentralValue.IsHostTurn);
     }
 
     public void BothPlayerDrawACard()
@@ -212,25 +253,52 @@ public class PlayRoomManager : Singleton<PlayRoomManager>
         yield return AnimationUtility.ExecuteTriggerThenWait(card, TriggerName.FlipOut);
     }
 
-    public void UpdateActionField(bool isYourTurn)
+    public void UpdateActionField(bool isYourTurn, TurnPhase currentPhase)
     {
             currentTurnText.text = isYourTurn ? EnumUtility.GetDescription(CurrentTurn.YourTurn) 
                 : EnumUtility.GetDescription(CurrentTurn.OpponentsTurn);
 
-            Miscellaneous.SetButtonEnabled(mainPhase1Button, isYourTurn);
-            Miscellaneous.SetButtonEnabled(combatPhaseButton, isYourTurn);
-            Miscellaneous.SetButtonEnabled(mainPhase2Button, isYourTurn);
-            Miscellaneous.SetButtonEnabled(endTurnButton, isYourTurn);
+        Miscellaneous.SetButtonEnabled(mainPhase1Button,
+            isYourTurn
+            && currentPhase < TurnPhase.MainPhase1,
+            HexEnum.Ivory,
+            currentPhase == TurnPhase.MainPhase1
+            ? HexEnum.Green
+            : HexEnum.Gray
+            );
+            
+        Miscellaneous.SetButtonEnabled(combatPhaseButton, 
+            isYourTurn
+            && currentPhase < TurnPhase.CombatPhase,
+            HexEnum.Ivory,
+             currentPhase == TurnPhase.CombatPhase
+            ? HexEnum.Green
+            : HexEnum.Gray
+            );
+            
+        Miscellaneous.SetButtonEnabled(mainPhase2Button, 
+            isYourTurn
+            && currentPhase < TurnPhase.MainPhase2
+            ,
+             HexEnum.Ivory,
+             currentPhase == TurnPhase.MainPhase2
+            ? HexEnum.Green
+            : HexEnum.Gray
+            );
+            
+        Miscellaneous.SetButtonEnabled(endTurnButton, isYourTurn, 
+            HexEnum.Ivory,
+            HexEnum.Gray);
         }
     }
 
 
 public enum CurrentTurn
 {
-    [Description("Your Turn")]
+    [Description("Your\nTurn")]
     YourTurn,
 
-    [Description("Opponent's Turn")]
+    [Description("Opponent's\nTurn")]
     OpponentsTurn
 }
 

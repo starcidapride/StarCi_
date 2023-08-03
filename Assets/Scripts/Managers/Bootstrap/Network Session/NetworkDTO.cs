@@ -108,27 +108,52 @@ public struct NetworkPlayerDatas : INetworkSerializable
     }
 }
 
+public enum TurnPhase
+{   
+    PrePhase,
+    MainPhase1,
+    CombatPhase,
+    MainPhase2
+}
+
 public struct NetworkGameCentral : INetworkSerializable
 {
     private int turnId;
 
-    private bool isYourTurn;
+    private bool isHostTurn;
+
+    private TurnPhase turnPhase;
+
     public int TurnId
     {
         get { return turnId; }
         set { turnId = value; }
     }
 
-    public bool IsYourTurn
+    public bool IsHostTurn
     {
-        get { return isYourTurn; }
-        set { isYourTurn = value; }
+        get { return isHostTurn; }
+        set { isHostTurn = value; }
+    }
+
+    public TurnPhase TurnPhase
+    {
+        get { return turnPhase; }
+        set { turnPhase = value; }
+    }
+
+    public void GoNextTurn()
+    {
+        turnId++;
+        isHostTurn = !isHostTurn;
+        turnPhase = TurnPhase.PrePhase;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref turnId);
-        serializer.SerializeValue(ref isYourTurn);
+        serializer.SerializeValue(ref isHostTurn);
+        serializer.SerializeValue(ref turnPhase);
     }
 }
 public struct NetworkLobby : INetworkSerializable

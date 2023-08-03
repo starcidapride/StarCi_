@@ -63,5 +63,9 @@ public enum HexEnum
     [Description("#C8C8C8")]
     Gray,
     [Description("#F5EBE0")]
-    Beige
+    Beige,
+    [Description("#A0C49D")]
+    Green,
+    [Description("#F1C27B")]
+    Yellow
 }
